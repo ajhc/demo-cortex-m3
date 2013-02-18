@@ -183,11 +183,11 @@ DIRLIB = $(DIRAVR)/avr/lib
 
 # Define programs and commands.
 SHELL = sh
-CC = arm-none-eabi-gcc
-OBJCOPY = arm-none-eabi-objcopy
-OBJDUMP = arm-none-eabi-objdump
-SIZE = arm-none-eabi-size
-NM = arm-none-eabi-nm
+CC = arm-linux-gnueabi-gcc-4.7
+OBJCOPY = arm-linux-gnueabi-objcopy
+OBJDUMP = arm-linux-gnueabi-objdump
+SIZE = arm-linux-gnueabi-size
+NM = arm-linux-gnueabi-nm
 REMOVE = rm -f
 COPY = cp
 YACC = bison
