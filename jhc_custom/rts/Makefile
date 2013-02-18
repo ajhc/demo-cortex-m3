@@ -19,7 +19,7 @@ EXTRAINCDIRS = .
 # gnu89 - c89 plus GCC extensions
 # c99   - ISO C99 standard (not yet fully implemented)
 # gnu99 - c99 plus GCC extensions
-CSTANDARD = 
+CSTANDARD = -std=gnu99
 # Place -D or -U options here
 CDEFS = -DBUILD=0x`date '+%Y%m%d'`
 # Place -I options here
@@ -39,6 +39,8 @@ CFLAGS += -O$(OPT)
 #CFLAGS += -Wa,-adhlns=$(<:.c=.lst)
 CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += $(CSTANDARD)
+# for jhc
+CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0
 # Define programs and commands.
 SHELL = sh
 CC = arm-linux-gnueabi-gcc-4.7

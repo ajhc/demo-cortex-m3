@@ -36,6 +36,16 @@ int main(void)
 	// STM32の初期化 クロック設定
 	SystemInit();
 	NVIC_SetVectorTable(0x3000, 0);
+
+	{ /* Run Haskell code */
+		int hsargc = 1;
+		char *hsargv = "q";
+		char **hsargvp = &hsargv;
+
+		hs_init(&hsargc, &hsargvp);
+		_amain();
+		/* hs_exit(); */
+	}
 	
 	// JTAGを無効にします。
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO , ENABLE);
@@ -63,3 +73,19 @@ int main(void)
 
 }
 
+/* xxxxxxxx You should implement below, before run me! */
+void *stdout;
+void *stderr;
+char *setlocale(int category, const char *locale) {return (void*)0;};
+void abort() {};
+int fputs(int c, void *stream) {return 0;};
+int fflush(void *stream) {return 0;};
+void exit(int status) {};
+void jhc_print_profile() {};
+void free(void *ptr) {};
+void fprintf() {}; // xxx not match type.
+void *malloc(int size) {return 0;};
+int fputc(int c, void *stream) {return 0;}
+void *realloc(void *ptr, int size) {return 0;}
+void *memset(void *s, int c, int n) {return 0;}
+void *memalign(int alignment, int size) {return 0;}

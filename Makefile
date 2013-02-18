@@ -43,7 +43,7 @@ TARGET = mini-demo
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = main.c stm32f10x_it.c
+SRC = main.c stm32f10x_it.c hs_main.c
 
 
 ASRC =
@@ -61,7 +61,7 @@ DEBUG = stabs
 
 # List any extra directories to look for include files here.
 #     Each directory must be seperated by a space.
-EXTRAINCDIRS = lib/STM32F10x_StdPeriph_Driver/inc lib/CMSIS/Core/CM3
+EXTRAINCDIRS = lib/STM32F10x_StdPeriph_Driver/inc lib/CMSIS/Core/CM3 jhc_custom/rts
 
 
 # Compiler flag to set the C Standard level.
@@ -148,7 +148,7 @@ EXTMEMOPTS =
 LDFLAGS = -T stm32f10x_hd_flash_offset.ld
 #LDFLAGS += -Wl,-Map=$(TARGET).map,--cref
 LDFLAGS += $(EXTMEMOPTS)
-LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB) $(patsubst %,-L%,$(DIRLIB)) -lstd -lcm3
+LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB) $(patsubst %,-L%,$(DIRLIB)) -lstd -lcm3 -ljhcrts
 #lib/STM32F10x_StdPeriph_Driver/libstd.a
 #LDFLAGS += -Wl,--section-start=.bootloader=0x3800
 
@@ -159,7 +159,7 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB) $(patsubst %,-L%,$(DIRLIB)) -l
 
 # Define directories, if needed.
 DIRINC = .
-DIRLIB = ./lib/STM32F10x_StdPeriph_Driver ./lib/CMSIS/Core/CM3
+DIRLIB = ./lib/STM32F10x_StdPeriph_Driver ./lib/CMSIS/Core/CM3 ./jhc_custom/rts
 
 
 # Define programs and commands.
@@ -202,7 +202,7 @@ ALL_ASFLAGS = -mcpu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 # Default target.
 all: gccversion build sizeafter
 
-build: stdlib elf hex eep lss sym
+build: stdlib jhcrts elf hex eep lss sym
 
 elf: $(TARGET).elf
 hex: $(TARGET).hex
@@ -214,6 +214,8 @@ sym: $(TARGET).sym
 stdlib:	lib
 	$(MAKE) -C lib
 
+jhcrts: jhc_custom/rts
+	$(MAKE) -C jhc_custom/rts
 
 # Display size of file.
 HEXSIZE = $(SIZE) --target=$(FORMAT) $(TARGET).hex
@@ -258,6 +260,8 @@ flash:
 %.elf : $(OBJ)
 	$(LD) $(STARTUP) $(OBJ) -o $@ $(LDFLAGS) 
 
+hs_main.c : hs_src/Main.hs
+	jhc -fffi -C -o $@ $<
 
 # Compile: create object files from C source files.
 %.o : %.c
@@ -281,6 +285,7 @@ flash:
 
 distclean: clean
 	$(MAKE) -C lib clean
+	$(MAKE) -C jhc_custom/rts clean
 
 
 # Target: clean project.
@@ -298,7 +303,7 @@ clean:
 	$(REMOVE) $(SRC:.c=.s)
 	$(REMOVE) $(SRC:.c=.d)
 	$(REMOVE) .dep/*
-
+	$(REMOVE) hs_main.c
 
 
 
