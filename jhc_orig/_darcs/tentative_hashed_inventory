@@ -1,0 +1,318 @@
+pristine:0000001501-8f9ed09a2c6f41a9b1a751fdf1f861b48fcb3cf6bd9f00a4cd717c4e1d8f6f85
+Starting with inventory:
+0000008752-263b5bc6c36a0fc3f576a00a85f34c5a77ff0733d9403592624adc04494c0282
+[TAG 0.8.0
+John Meacham <john@repetae.net>**20120208020026
+ Ignore-this: 2d0d963331a43650879ae72d81ff62e8
+] 
+hash: 0000005893-3830c28b5c2663927c24d37bd4203a767c84a3e362ff0d0869beedf526e41aac
+[jhc.spec fixes
+John Meacham <john@repetae.net>**20120209015329
+ Ignore-this: 64488edc34893a734f81b1c01c0b1ff4
+] 
+hash: 0000000270-78f029c5453010be3a1e77ef5feff0345d7a2f47b447b377e313eb429de63bd8
+[Add some more exotic primitive ops, ffs,clz,ctz,byteswap,popcount,parity.
+John Meacham <john@repetae.net>**20120209070848
+ Ignore-this: b61b1c08db35ccad33f24536b99913df
+] 
+hash: 0000000681-da432e26d4f940ae469dade331dd0fbffda24a5bc18e4523429b106d928bdd24
+[add foreign types, interpret Ptr when creating external C types
+John Meacham <john@repetae.net>**20120209090647
+ Ignore-this: c49bea3938e2edabda9d7528cfb1121a
+] 
+hash: 0000001825-4541ac84baa0c9c9cb4b9ad9b37e07c198f5c27a3f08e0c14f31b046c45f8769
+[add md5lazyIO, check for bad paths in createTempFile
+John Meacham <john@repetae.net>**20120209091527
+ Ignore-this: f9e5f0dafc9615d5c5c50cb49829c5a5
+] 
+hash: 0000000937-ccdea800521adfe7434ee2332ccebb8430971545c17fafe822137a1e142e1e14
+[add 'capi' foreign function call type, simplify type of E.FromHs monad, check for more FFI related errors
+John Meacham <john@repetae.net>**20120209091611
+ Ignore-this: 1945b5336e6001d6da6cd63a77bd1efd
+] 
+hash: 0000007094-3d6284fc4df697f9acfbd2daa976775faa66e4cdef179591ff0cd8b295e28b01
+[turn ExtType into a real abstract type
+John Meacham <john@repetae.net>**20120209100704
+ Ignore-this: c802a07fee0f2461cca19aa28f99ff61
+] 
+hash: 0000008199-f2b88d82af7cd47b1b21f2bf204f493943284c641f5a79a4f700948409dbb9a8
+[remove APrim type, use Prim directly, clean up corresponding cruft.
+John Meacham <john@repetae.net>**20120209104920
+ Ignore-this: 8a3fbeea72e7f52809a3468df2b8b228
+] 
+hash: 0000015093-b24764181038a4604fd0843bb9729bc2be5c9ed5ef02ddce2e9aff389dbb567b
+[fix obscure error message for invalid instance reported by roman
+John Meacham <john@repetae.net>**20120209114221
+ Ignore-this: 98d60e20cb63caaebbe1269887160b9f
+] 
+hash: 0000002698-fa891dfa406d7a5eeefa8695107e24d5bb36694a5648b0d849df26e33e9e7cbf
+[add extension to allow multiple return values from c functions
+John Meacham <john@repetae.net>**20120209142228
+ Ignore-this: 51e4a3f9ca80ff2eae7f21376f0a0992
+] 
+hash: 0000012285-11b03028a82bc4ec06f919f1072d5c80f0c90df96fde62137200c7766c8cfda3
+[add documentation for the multi-return ccall extension, clean up code.
+John Meacham <john@repetae.net>**20120209201351
+ Ignore-this: 47504b653ee9f71bde40e91959238292
+] 
+hash: 0000005255-59ed27f9d8d53eeca64564f950e4071498f344105da98070ca63e73c052fdd48
+[add c-- types for complex and vector values
+John Meacham <john@repetae.net>**20120210051026
+ Ignore-this: 4a1e4c8cec01f73b75913622c22fa55
+] 
+hash: 0000005513-7324d9a6ae28b2996d914cd3764f29a37668831478e77490aa2d842dd762fc9a
+[added mingw32-gcc to MINGW search
+Sergei Trofimovich <slyfox@community.haskell.org>**20110414073938
+ Ignore-this: 87fa46f0e4532663a9d92930c9c38152
+] 
+hash: 0000000334-a4cc0b1e03d15e5389b4fb109003cb37e3408fadaa57b7c1cbd707ffce776eca
+[Add missing src/Options.hs to jhc tarball
+Sergei Trofimovich <slyfox@community.haskell.org>**20120209065334
+ Ignore-this: dfc50115ee26986ab2d303a462cd29b9
+] 
+hash: 0000000318-8773e4f8de5e7e488784ce5cbb320378db8b192a6e0d6855092e9fdcd69f20f8
+[added user defined kind extension
+John Meacham <john@repetae.net>**20120211042248
+ Ignore-this: ded329985c5c81aa8c4612f7aa19559b
+] 
+hash: 0000011067-7297293bc985f9739b76f4c611dbb9b0acd798938fdf85cad5d835385c284af1
+[fix Options.hs makefile dependency
+John Meacham <john@repetae.net>**20120211024909
+ Ignore-this: a0742d7ce4eba41314741b6ca2d6498d
+] 
+hash: 0000000237-1f1c7156d967eaea9916fd44c509e6104ebab8bdbaee7daee0db4043c1221e90
+[allow being explicit in export/import lists by specifying 'kind', 'class', 'type', or 'data'. add PTS rule to allow proper typing of Complex_
+John Meacham <john@repetae.net>**20120211052157
+ Ignore-this: 12155286186022f896d3474a2bb5d23a
+] 
+hash: 0000007574-8484061918155d7db5a5084d786bd36e6947b26c27b3be907d112836ab4baf62
+[add rts/test directory
+John Meacham <john@repetae.net>**20120212004706
+ Ignore-this: 1e6d0cb4ba809a1d6089d04704d5a60f
+] 
+hash: 0000004973-953773b3e304c09939792ee934367e9f5c42746a51d3ab36201bdb079c854b01
+[reorganize rts/ directory, add README for it
+John Meacham <john@repetae.net>**20120212022718
+ Ignore-this: c8a9f067696233958757830b62a7264b
+] 
+hash: 0000002023-92001b6af99273427474c98e46493652f52f99f8e47a389cc0de69d388cad3f1
+[add unit tests for stableptr
+John Meacham <john@repetae.net>**20120212031148
+ Ignore-this: 17b41baeec806fb53ca2c10c6489097
+] 
+hash: 0000015576-39792ea083af8fab10aa820b1da55feeaec4aa4e1c8f1184be48b7cd572c1136
+[move slub.c and jhc_jgc.* to rts directory
+John Meacham <john@repetae.net>**20120212040246
+ Ignore-this: a40354544b8908732c733bf8a38e7e68
+] 
+hash: 0000003453-a9633b19dfc246ea3e12b2e8c4219d5e364c541d4f0c79068419d5df9d576ede
+[make 'Requires' a simple set, include the calling convention with the requirements.
+John Meacham <john@repetae.net>**20120212053838
+ Ignore-this: b7fa6f8ece79c96073d8638a876456de
+] 
+hash: 0000008146-85344273e447e2c298ba564f75376f16a138c6043a7e3d9818f479083be2836b
+[added rts/rts_support, cleaned up rts code.
+John Meacham <john@repetae.net>**20120213070644
+ Ignore-this: 79533860331fbd02057748e3d1b81666
+] 
+hash: 0000014704-2743a04c8522171ebd763bfae407dc76acec1aa338efd652180ef5e0c2b725c5
+[move jhc_rts_alloc to gc_none
+John Meacham <john@repetae.net>**20120213100906
+ Ignore-this: 1c2e9028d72127acd5a448971266f627
+] 
+hash: 0000008475-b251f1337cb6ca399e080a55487e3d90d78832f7fb3bb70c744c749fcdb8b663
+[make += work with '-m' command line options
+John Meacham <john@repetae.net>**20120213102300
+ Ignore-this: 36cb4039cd34ba73d2cc973b7c00798b
+] 
+hash: 0000000311-14e99cd04065ce05f99cdaa959e06e6a4571f9fd01f3059a55dd913e300a96f0
+[fixes for android
+John Meacham <john@repetae.net>**20120213150333
+ Ignore-this: cf6df59b212e3402ec21507410485270
+] 
+hash: 0000001166-eca73c311f3f0dec589f4c3fb8a7ee208cb94f00b920043edc233ee0301b8cbc
+[update documentation with new extensions
+John Meacham <john@repetae.net>**20120214172359
+ Ignore-this: 2f412f29f20127ce3f97f200674ed8b6
+] 
+hash: 0000005502-46871ff219ff3391375c34c000ebdd84eaf703850e84a378032e21f266ff753f
+[add pragmaExp to the lexer/parser
+John Meacham <john@repetae.net>**20120216044837
+ Ignore-this: 77393cb5bdd28fba526d57d26ac099b8
+] 
+hash: 0000002438-1740f6988fd6f1722506058149a1b65192bb290e8ca17fe3ae59ace3043e7206
+[move rest of rts into seperate c files rather than including it directly.
+John Meacham <john@repetae.net>**20120216090215
+ Ignore-this: d0bf719a38e306f78e182a5c0107573d
+] 
+hash: 0000029151-977ebff176612a18728d46dc0ba5682d83ec8aa5058e79d869be9b6de2b8c2d6
+[fix for building rts in different modes, profile,debug,windows
+John Meacham <john@repetae.net>**20120216201402
+ Ignore-this: 39b08c82b7239beaeaa6e77a3b986cd4
+] 
+hash: 0000004459-25a7339c2f3f6050a9b8c36b89f375907bb41345df421e7d88872e533cafc241
+[Improves the error message shown when a monomorphic pattern has a polymorphic type that cannot be defaulted. 
+jcpetruzza@gmail.com**20120211045931
+ Ignore-this: efd70b7535eb0444148aabdbe96ed0b9
+ 
+ The previous error message seemed more like an internal error ("withDefaults.ambiguity: ...")
+] 
+hash: 0000001780-2fad2fbd753785cbe794ab39bcc49397325e93a09423de0e417d2f9f782ead44
+[The typechecker now verifies that the main function has a type that can be unified with IO a. This is required by the Haskell 98 Report.
+jcpetruzza@gmail.com**20120211050446
+ Ignore-this: 8a1d8ca36929c0de0fb4357538ea6c5b
+ 
+ Failing to do so allows both to accept invalid programs like:
+ 
+ > main :: [()]
+ > main = return ()
+ 
+ and to reject valid programs like:
+ 
+ > main = return ()
+ 
+] 
+hash: 0000000947-a3b29c1ce2caa70f873d39140431dc6f2706799fddbd3f0c088e3532938930e5
+[Moved Jhc.List.drop to module Jhc.Basics (since it is used in instance deriving)
+jcpetruzza@gmail.com**20120214222939
+ Ignore-this: f95d4818bad6d79d8fc7566ee0912714
+] 
+hash: 0000000623-90bb9b00fb19694ae42cfafe74d94d5e981105c29aebc7d626446e334dee8ed9
+[Makes the class deriving mechanism more robust:
+jcpetruzza@gmail.com**20120216214017
+ Ignore-this: 6d93691849d255c310b2af7098572ea8
+  - the names of the classes to be derived may be given qualified. 
+  - the functions from the Prelude internally used need not be in scope
+    and won't clash with other bindings.
+] 
+hash: 0000015875-2a0e87cb853202aa80e28efb8864818a12864322e4ace5fcdefc7d548a3182c7
+[export gc_alloc
+John Meacham <john@repetae.net>**20120217002235
+ Ignore-this: dcb70b3ad303f0343147b4e1d6d413b9
+] 
+hash: 0000000173-e7fb43326bc64fd460f741ca8c98ff023e43bec5997f6b1749d0c9ce7290c2da
+[fix rts unit tests
+John Meacham <john@repetae.net>**20120217035045
+ Ignore-this: 460d7eadde056908b668ea27d5a69aa5
+] 
+hash: 0000003590-5290d4b9f79b5e9227be49e4cedb3d691ce2bab86e801830bc83189048a7144b
+[move debugging routines to rts/profile.c
+John Meacham <john@repetae.net>**20120217052015
+ Ignore-this: d2e087faf6e3408dc135fd905d85244b
+] 
+hash: 0000004922-0cd70797477a8f47e7f677cd43b0ce9a6d523d82eb6608d503b3b74be86655b8
+[disabled buggy unused transformation in type analysis pass
+John Meacham <john@repetae.net>**20120220031442
+ Ignore-this: 8ad84739daff7f4faff0ba251898ea1a
+] 
+hash: 0000005518-efea131749b745d8e116cdb3b05738e4e367f27b3cbe5108f8c1e01453b5c44c
+[fix deriving rules for read/show when it comes to labels
+John Meacham <john@repetae.net>**20120220044322
+ Ignore-this: 20c9c89ae066716fe3ec8eb4d37c6034
+] 
+hash: 0000001262-a6c50ffd1caed3be8ac65efbcb99d1c46d2e00bea25e9f446aea7c469d151d8f
+[add prototype for gc_alloc
+John Meacham <john@repetae.net>**20120220050616
+ Ignore-this: 444b34148332459dc0e3d32b7c55d3e0
+] 
+hash: 0000000231-3e3a0054a7ed165c0b97fcb6e005051d905a474ca43d5db886addc75ca2b824d
+[make 'div' and 'mod' round to -Infinity properly
+John Meacham <john@repetae.net>**20120220094634
+ Ignore-this: c46b383b9a2a6a63ff44e30a8a63f376
+] 
+hash: 0000001957-a60af1a45bd6ce4a722baa03fcee25d32fb4999db24129228d41ce866978ba0c
+[introduce dedicated array allocation routine. clean up jgc garbage collector
+John Meacham <john@repetae.net>**20120221011655
+ Ignore-this: b8e153205aeaf94af76a97b0ee9aa895
+] 
+hash: 0000010107-2b18b633fc05c726599e5d56c147e19531a156fe7f845b436b030c9ab3659147
+[add support for monolithic blocks that are plain malloced memory and can be big.
+John Meacham <john@repetae.net>**20120221032043
+ Ignore-this: 201ba4e67027f3336cfa5e984aefa89
+] 
+hash: 0000012176-13dbeec1bd5c489e2f8c44db40b32bdacac33b88595fe1673060d083ebe45011
+[implement finalizers in the RTS, add foreignptr rts routines, properly set saved_gc on safe ffi calls
+John Meacham <john@repetae.net>**20120221132313
+ Ignore-this: 1a27919674abc4a6955c245eec88aaf9
+] 
+hash: 0000020453-f6a74b91d6d7818de0e8d8383fabb1a6aa9d6a02ad8c691038a1ccc74fc1d612
+[ghc 7.4 compatibility changes
+John Meacham <john@repetae.net>**20120306035643
+ Ignore-this: c15e182e5a05efb7a623f6386fbb9884
+] 
+hash: 0000014180-859d0e768c1c833f53c73b1dbb5ab38ddbb535cd1416d23e5655859d13877985
+[build_extlibs.prl: correctly check the return status of getstore
+Roman Cheplyaka <roma@ro-che.info>**20120218071732
+ Ignore-this: 20165069fc8aaa1528969216f7c51435
+] 
+hash: 0000000391-8ccb730f9821000ef8d77866b9c1d73629aa97f86cf256aceec67f6ca29245f2
+[make Info type ids not depend on the exact format of TypeRep, reduce size of type ids from 32 to 8 bits.
+John Meacham <john@repetae.net>**20120307014613
+ Ignore-this: c2243c0c28122f03a4b869c28a449d8d
+] 
+hash: 0000002058-2835cf62fdfd8717da4ebb2c920ce9ab67b13b5947bced3fdc536a4a1aa84369
+[remove some files from drift_processed that no longer have DrIFT annotations
+John Meacham <john@repetae.net>**20120307020552
+ Ignore-this: 12c00145035104fbbf869072f3be3569
+] 
+hash: 0000001442-efd2f687c277ec24854e6c7f12c6dade5b7e38a95a46222d45323c5502c7c9ca
+[start using Jhc.ForeignPtr
+John Meacham <john@repetae.net>**20120307035523
+ Ignore-this: 4947965ba3de583014a924e498ba5367
+] 
+hash: 0000001351-bd433ce2c52c23ab14bacee5bf8fcbee39c9a48e8d460ea5f5142a5eefdb697c
+[begin adding haskell2010 package
+John Meacham <john@repetae.net>**20120307035605
+ Ignore-this: eaae9201d70dece4f2e7bb115d295e07
+] 
+hash: 0000004057-3b4fe85dd77d8869128232c3a21674233630ed8970e82fbdff5c0e6fa1e97f18
+[add auto-generated make rules for all libraries.
+John Meacham <john@repetae.net>**20120307055016
+ Ignore-this: a6febbaf42d19ca29b0541809182b93c
+] 
+hash: 0000015509-b2c2a6846c13687db943b4dd23a6f1ce85d2d8068711170eb442e6f23a612417
+[mv base to haskell-extras 
+John Meacham <john@repetae.net>**20120307061504
+ Ignore-this: acc62fbf85b246155f10055cf7228cd7
+] 
+hash: 0000012009-fc40b77e72cfc3c6250c005453bad2920fcc8ddb414c4327f37041f15991425e
+[clean up configure.ac a little
+John Meacham <john@repetae.net>**20120307085227
+ Ignore-this: 255bde23aa451530727987934e68787
+] 
+hash: 0000000782-9ba56a8164272cbdf35da31cd234e68c1e26eaf6b9b906ad07932bee7388d74c
+[update library dependencies
+John Meacham <john@repetae.net>**20120307100809
+ Ignore-this: 8a7d092c6112d7a5590d2adaec9c271a
+] 
+hash: 0000027911-be3302722d19d07f712779b2072096539fd9785d1c86e0c4cc43eae21fe1d867
+[remove HsNewTypeDecl in favor of re-using existing HsDataDecl, clean up code as a result.
+John Meacham <john@repetae.net>**20120311030703
+ Ignore-this: 2b50fff95eeca8295050be2eff84b82
+] 
+hash: 0000011098-601e256789d9180feda45e7e58dff8d100eaab63d657b5ad3b8aa16814a0026e
+[add support for CTYPE pragma
+John Meacham <john@repetae.net>**20120311040440
+ Ignore-this: 3df9d37a3d057f01809bd2aa50baad42
+] 
+hash: 0000007103-c20932f770e60926632af3b529d45a25f539911331c46910a6b7ca094146c2f0
+[utilize the CTYPE pragma for most built in types, clean up src/data/names.txt
+John Meacham <john@repetae.net>**20120311055029
+ Ignore-this: 3965b08298708f2a1bf42ae09df3b321
+] 
+hash: 0000013418-2b5f18e74252b15265624e003b6e2b95d8dbf66e35ec68e6e33083a40ea0fc03
+[update manual entry for CTYPE
+John Meacham <john@repetae.net>**20120313005607
+ Ignore-this: 8a1c03f1f92e00c503edf78f675bc434
+] 
+hash: 0000000751-6b2e557d18bac5210f2295e4de6b2404afdb3ebaa66ceb33e80ea56eb0669e44
+[add jhc/Jhc/ForeignPtr.hs
+John Meacham <john@repetae.net>**20120313202521
+ Ignore-this: 46f936c65c0e521e47da1e2baf2b2de0
+] 
+hash: 0000003248-fe1a707e39fe4e40e86a27ce71dde21b841d3275778a53b25d2afc6d5f2eb2e4
+[fix 'distcheck', include compat/ in tarball
+John Meacham <john@repetae.net>**20120314075854
+ Ignore-this: da7d2b2dc1dd8353a59199bfbdc2dc08
+] 
+hash: 0000000841-9a0e0c61f09a0d44f7636b16346326017f4e4e26b13a0da738a2071d67f59206

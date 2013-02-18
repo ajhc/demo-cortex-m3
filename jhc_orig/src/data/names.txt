@@ -1,0 +1,174 @@
+TypeConstructor:tc:
+
+IOErrorType  Jhc.Type.Handle.IOErrorType
+IOMode       Jhc.Type.Handle.IOMode
+
+Bang_      Jhc.Prim.Rts.Bang_
+Arrow      Jhc.Prim.Prim.->
+MutArray__ Jhc.Prim.Array.MutArray_
+List       Jhc.Prim.Prim.[]
+Char       Jhc.Type.Basic.Char
+IO         Jhc.Prim.IO.IO
+ST         Jhc.Prim.IO.ST
+ACIO       Jhc.Prim.IO.ACIO
+State_     Jhc.Prim.IO.State_
+RealWorld  Jhc.Prim.IO.RealWorld
+Bool       Jhc.Prim.Prim.Bool
+Ordering   Jhc.Prim.Prim.Ordering
+Bool_      Jhc.Prim.Bits.Bool_
+Unit       Jhc.Prim.Prim.()
+
+# Jhc.Type
+Ratio      Jhc.Type.Float.Ratio
+Float      Jhc.Type.Float.Float
+Double     Jhc.Type.Float.Double
+Ptr        Jhc.Type.Ptr.Ptr
+FunPtr     Jhc.Type.Ptr.FunPtr
+
+Integer   Jhc.Type.Basic.Integer
+
+Int       Jhc.Type.Word.Int
+
+Bits1      Jhc.Prim.Bits.Bits1_
+Bits8      Jhc.Prim.Bits.Bits8_
+Bits16     Jhc.Prim.Bits.Bits16_
+Bits32     Jhc.Prim.Bits.Bits32_
+Bits64     Jhc.Prim.Bits.Bits64_
+Bits128    Jhc.Prim.Bits.Bits128_
+BitsPtr    Jhc.Prim.Bits.BitsPtr_
+BitsMax    Jhc.Prim.Bits.BitsMax_
+
+Float32    Jhc.Prim.Bits.Float32_
+Float64    Jhc.Prim.Bits.Float64_
+Float80    Jhc.Prim.Bits.Float80_
+Float128   Jhc.Prim.Bits.Float128_
+
+Complex    Jhc.Prim.Bits.Complex_
+
+Addr_      Jhc.Prim.Bits.Addr_
+FunAddr_   Jhc.Prim.Bits.FunAddr_
+Char_      Jhc.Prim.Bits.Char_
+
+DataConstructor:dc:
+
+Boolzh     Jhc.Prim.Prim.Bool#
+Char       Jhc.Type.Basic.Char
+Cons       Jhc.Prim.Prim.:
+EmptyList  Jhc.Prim.Prim.[]
+Int        Jhc.Type.Word.Int
+Integer    Jhc.Type.Basic.Integer
+Ratio      Jhc.Type.Float.:%
+Unit       Jhc.Prim.Prim.()
+Pair       Jhc.Prim.Prim.(,)
+Word       Jhc.Type.Word.Word
+True       Jhc.Prim.Prim.True
+False      Jhc.Prim.Prim.True
+EQ         Jhc.Prim.Prim.EQ
+
+ClassName:class:
+Eq              Jhc.Class.Ord.Eq
+Ord             Jhc.Class.Ord.Ord
+Enum            Jhc.Enum.Enum
+Bounded         Jhc.Enum.Bounded
+Show            Jhc.Show.Show
+Read            Jhc.Text.Read.Read
+Ix              Data.Ix.Ix
+Functor         Jhc.Monad.Functor
+Monad           Jhc.Monad.Monad
+Num             Jhc.Class.Num.Num
+Real            Jhc.Class.Real.Real
+Integral	Jhc.Class.Real.Integral
+Fractional	Jhc.Class.Real.Fractional
+Floating	Jhc.Float.Floating
+RealFrac	Jhc.Float.RealFrac
+RealFloat	Jhc.Float.RealFloat
+
+RawType:rt:
+
+bits8         bits8
+bits16        bits16
+bits32        bits32
+bits64        bits64
+bits128       bits128
+bool          bool
+float32       fbits32
+float64       fbits64
+float80       fbits80
+float128      fbits128
+bits_max_     bits<max>
+bits_ptr_     bits<ptr>
+
+Val:v:
+
+eqString         Jhc.String.eqString
+eqUnpackedString Jhc.String.eqUnpackedString
+error            Jhc.IO.error
+map              Jhc.Basics.map
+and              Jhc.Order.&&
+foldr            Jhc.Basics.foldr
+foldl            Jhc.Basics.foldl
+drop             Jhc.List.drop
+cat              Jhc.Basics.++
+compose          Jhc.Basics..
+
+bind                 Jhc.Monad.>>=
+bind_                Jhc.Monad.>>
+fail                 Jhc.Monad.fail
+concatMap            Jhc.Basics.concatMap
+fromInteger          Jhc.Class.Num.fromInteger
+fromInt              Jhc.Class.Num.fromInt
+sub                  Jhc.Class.Num.-
+fromRational         Jhc.Class.Real.fromRational
+negate               Jhc.Class.Num.negate
+compare              Jhc.Class.Ord.compare
+leq                  Jhc.Class.Ord.<=
+geq                  Jhc.Class.Ord.>=
+lt                   Jhc.Class.Ord.<
+gt                   Jhc.Class.Ord.>
+equals               Jhc.Class.Ord.==
+fromEnum             Jhc.Enum.fromEnum
+toEnum               Jhc.Enum.toEnum
+enumFrom             Jhc.Enum.enumFrom
+enumFromTo           Jhc.Enum.enumFromTo
+enumFromThenTo       Jhc.Enum.enumFromThenTo
+enumFromThen         Jhc.Enum.enumFromThen
+succ                 Jhc.Enum.succ
+pred                 Jhc.Enum.pred
+minBound             Jhc.Enum.minBound
+maxBound             Jhc.Enum.maxBound
+showsPrec            Jhc.Show.showsPrec
+showParen            Jhc.Show.showParen
+showChar             Jhc.Show.showChar
+showString           Jhc.Show.showString
+readsPrec            Jhc.Text.Read.readsPrec
+readParen            Jhc.Text.Read.readParen
+lex                  Jhc.Text.Read.lex
+range                Data.Ix.range
+index                Data.Ix.index
+inRange              Data.Ix.inRange
+runExpr              Prelude.IO.runExpr
+runRaw               Jhc.Prim.Wrapper.runRaw
+runMain              Jhc.IO.runMain
+runNoWrapper         Jhc.Prim.Wrapper.runNoWrapper
+
+enum_succ            Jhc.Inst.PrimEnum.enum_succ
+enum_pred            Jhc.Inst.PrimEnum.enum_pred
+enum_from            Jhc.Inst.PrimEnum.enum_from
+enum_fromTo          Jhc.Inst.PrimEnum.enum_fromTo
+enum_fromThen        Jhc.Inst.PrimEnum.enum_fromThen
+enum_fromThenTo      Jhc.Inst.PrimEnum.enum_fromThenTo
+enum_toEnum          Jhc.Inst.PrimEnum.enum_toEnum
+ix_index             Jhc.Inst.PrimEnum.ix_index
+ix_inRange           Jhc.Inst.PrimEnum.ix_inRange
+ix_range             Jhc.Inst.PrimEnum.ix_range
+
+SortName:s:
+# kinds
+Star Jhc@.*
+Hash Jhc@.#
+Bang Jhc@.!
+Tuple Jhc@.(#)
+
+# superkinds
+HashHash  Jhc@.##
+StarStar  Jhc@.**
