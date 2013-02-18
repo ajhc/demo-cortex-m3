@@ -308,7 +308,6 @@ aligned_alloc(unsigned size) {
         int ret = posix_memalign(&base,BLOCK_SIZE,MEGABLOCK_SIZE);
 #endif
         if(ret != 0) {
-                fprintf(stderr,"Unable to allocate memory for aligned alloc: %u\n", size);
                 abort();
         }
         return base;
@@ -654,29 +653,7 @@ gc_add_foreignptr_finalizer(wptr_t fp, HsFunPtr finalizer) {
         return true;
 }
 
-void
-print_cache(struct s_cache *sc) {
-        fprintf(stderr, "num_entries: %i with %lu bytes of header\n",
-                (int)sc->num_entries, sizeof(struct s_block) +
-                BITARRAY_SIZE_IN_BYTES(sc->num_entries));
-        fprintf(stderr, "  size: %i words %i ptrs\n",
-                (int)sc->size,(int)sc->num_ptrs);
-#if _JHC_PROFILE
-        fprintf(stderr, "  allocations: %lu\n", (unsigned long)sc->allocations);
-#endif
-        if(SLIST_EMPTY(&sc->blocks) && SLIST_EMPTY(&sc->full_blocks))
-                return;
-        fprintf(stderr, "  blocks:\n");
-        fprintf(stderr, "%20s %9s %9s %s\n", "block", "num_free", "next_free", "status");
-        struct s_block *pg;
-        SLIST_FOREACH(pg,&sc->blocks,link)
-            fprintf(stderr, "%20p %9i %9i %c\n", pg, pg->u.pi.num_free, pg->u.pi.next_free, 'P');
-        SLIST_FOREACH(pg,&sc->full_blocks,link)
-            fprintf(stderr, "%20p %9i %9i %c\n", pg, pg->u.pi.num_free, pg->u.pi.next_free, 'F');
-}
-
 void hs_perform_gc(void) {
         gc_perform_gc(saved_gc);
 }
-
 #endif

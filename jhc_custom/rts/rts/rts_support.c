@@ -31,28 +31,6 @@ hs_set_argv(int argc, char *argv[])
         jhc_progname = argv[0];
 }
 
-void A_NORETURN A_UNUSED A_COLD
-jhc_exit(int n) {
-        fflush(stdout);
-        jhc_print_profile();
-        exit(n);
-}
-
-void  A_NORETURN A_UNUSED  A_COLD
-jhc_error(char *s) {
-        fflush(stdout);
-        fputs(s,stderr);
-        fputs("\n",stderr);
-        jhc_exit(1);
-}
-
-void  A_NORETURN A_UNUSED  A_COLD
-jhc_case_fell_off(int n) {
-        fflush(stdout);
-        fprintf(stderr, "\n%s:%i: case fell off\n", __FILE__, n);
-        abort();
-}
-
 void jhc_hs_init(void);
 
 static int hs_init_count;
@@ -71,7 +49,6 @@ hs_init(int *argc, char **argv[])
                         jhc_options_os   = jhc_utsname.sysname;
                 }
 #endif
-                setlocale(LC_ALL,"");
         }
 }
 
@@ -79,11 +56,14 @@ void
 hs_exit(void)
 {
         if(!hs_init_count) {
-                fprintf(stderr, "hs_exit() called before hs_init()\n");
                 abort();
         }
         if(!--hs_init_count) {
                 jhc_alloc_fini();
-                jhc_exit(0);
+		abort();
         }
+}
+
+void abort() {
+	for (;;);
 }
