@@ -9,7 +9,8 @@
 
 gc_t saved_gc;
 struct s_arena *arena;
-static gc_t gc_stack_base;
+char gc_stack_base_area[(1UL << 8)*sizeof(gc_t)] __attribute__ ((aligned(16)));
+static gc_t gc_stack_base = gc_stack_base_area;
 
 #define TO_GCPTR(x) (entry_t *)(FROM_SPTR(x))
 
@@ -190,7 +191,7 @@ static struct s_cache *array_caches_atomic[GC_STATIC_ARRAY_NUM];
 void
 jhc_alloc_init(void) {
         VALGRIND_PRINTF("Jhc-Valgrind mode active.\n");
-        saved_gc = gc_stack_base = malloc((1UL << 18)*sizeof(gc_stack_base[0]));
+        saved_gc = gc_stack_base;
         arena = new_arena();
         if(nh_stuff[0]) {
                 nh_end = nh_start = nh_stuff[0];

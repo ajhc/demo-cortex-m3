@@ -10,7 +10,7 @@
 
 // I/Oなどの全ての#defineがあります。
 #include "stm32f10x_conf.h"
-
+#include "c_extern.h"
 
 
 // 空ループでウェイトするルーチン
@@ -63,6 +63,7 @@ int main(void)
 		/* hs_exit(); */
 	}
 
+#if 0
 	// オンボードLEDを交互に点滅させる
 	while(1){
 		GPIOA->ODR = _BV(13);
@@ -70,5 +71,19 @@ int main(void)
 		GPIOA->ODR = _BV(15);
 	    Delay(500000);
 	}
+#endif
+	for (;;);
 
+}
+
+void set_gpioa_13()
+{
+	GPIOA->ODR = _BV(13);
+	Delay(500000);
+}
+
+void set_gpioa_15()
+{
+	GPIOA->ODR = _BV(15);
+	Delay(500000);
 }
