@@ -72,8 +72,3 @@ int main(void)
 	}
 
 }
-
-/* xxxxxxxx You should implement below, before run me! */
-void free(void *ptr) {};
-void *malloc(int size) {return 0;};
-void *realloc(void *ptr, int size) {return 0;}

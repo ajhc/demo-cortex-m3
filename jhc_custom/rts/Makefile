@@ -3,7 +3,7 @@ MCU = cortex-m3 -mthumb
 # Target file name (without extension).
 TARGET = libjhcrts.a
 # List C source files here. (C dependencies are automatically generated.)
-SRC = rts/gc_jgc.c rts/jhc_rts.c rts/stableptr.c rts/rts_support.c
+SRC = rts/gc_jgc.c rts/jhc_rts.c rts/stableptr.c rts/rts_support.c rts/alloc.c
 # Optimization level, can be [0, 1, 2, 3, s]. 
 # 0 = turn off optimization. s = optimize for size.
 OPT = s

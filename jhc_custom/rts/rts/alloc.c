@@ -115,8 +115,7 @@
  *	DEBUG		enable debugging sanity checks.
  */
 
-#include <sys/param.h>
-#include "stand.h"
+#include <stdlib.h>
 
 /*
  * Each block actually has ALIGN(unsigned int) + ALIGN(size) bytes allocated
@@ -144,26 +143,20 @@ struct fl {
 	struct fl	*next;
 } *freelist;
 
-#ifdef HEAP_VARIABLE
-static char *top, *heapstart, *heaplimit;
-void
-setheap(void *start, void *limit)
-{
-	heapstart = top = start;
-	heaplimit = limit;
-}
-#define HEAP_START heapstart
-#define HEAP_LIMIT heaplimit
-#else /* !HEAP_VARIABLE */
-#ifndef HEAP_START
-extern char end[];
-#define HEAP_START end
-#endif
-static char *top = (char *)HEAP_START;
-#endif /* HEAP_VARIABLE */
+#define MALLOC_HEAPSIZE (1<<12)
+char malloc_heapstart[MALLOC_HEAPSIZE];
+char *malloc_heaplimit = (char *) (malloc_heapstart + MALLOC_HEAPSIZE);
 
-__compactcall void *
-alloc(size_t size)
+#define HEAP_START malloc_heapstart
+#define HEAP_LIMIT malloc_heaplimit
+static char *top = (char *)HEAP_START;
+
+typedef unsigned long int     uintptr_t;
+#define ALIGNBYTES	(sizeof(int) - 1)
+#define	ALIGN(p)	(((uintptr_t)(p) + ALIGNBYTES) & ~ALIGNBYTES)
+
+void *
+malloc(size_t size)
 {
 	struct fl **f = &freelist, **bestf = NULL;
 #ifndef ALLOC_FIRST_FIT
@@ -214,7 +207,7 @@ alloc(size_t size)
 		top += ALIGN(sizeof(unsigned int)) + ALIGN(size);
 #ifdef HEAP_LIMIT
 		if (top > (char *)HEAP_LIMIT)
-			panic("heap full (%p+%zu)", help, size);
+			abort();
 #endif
 		*(unsigned int *)(void *)help = (unsigned int)ALIGN(size);
 #ifdef ALLOC_TRACE
@@ -239,9 +232,8 @@ found:
 	return help + ALIGN(sizeof(unsigned int));
 }
 
-__compactcall void
-/*ARGSUSED*/
-dealloc(void *ptr, size_t size)
+void
+free(void *ptr)
 {
 	struct fl *f =
 	    (struct fl *)(void *)((char *)(void *)ptr -
@@ -266,4 +258,13 @@ dealloc(void *ptr, size_t size)
 	/* put into freelist */
 	f->next = freelist;
 	freelist = f;
+}
+
+void *
+realloc(void *ptr, size_t size)
+{
+	if (NULL != ptr) {
+		free(ptr);
+	}
+	return malloc(size);
 }
