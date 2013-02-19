@@ -77,5 +77,4 @@ int main(void)
 void free(void *ptr) {};
 void *malloc(int size) {return 0;};
 void *realloc(void *ptr, int size) {return 0;}
-void *memset(void *s, int c, int n) {return 0;}
 void *memalign(int alignment, int size) {return 0;}
