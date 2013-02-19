@@ -287,6 +287,9 @@ distclean: clean
 	$(MAKE) -C lib clean
 	$(MAKE) -C jhc_custom/rts clean
 
+write2stbeemini: all
+	$(OBJCOPY) -O binary $(TARGET).elf $(TARGET).bin
+	sudo dfu-util -s 0x08003000 -D $(TARGET).bin
 
 # Target: clean project.
 clean:
@@ -298,6 +301,7 @@ clean:
 	$(REMOVE) $(TARGET).sym
 	$(REMOVE) $(TARGET).lnk
 	$(REMOVE) $(TARGET).lss
+	$(REMOVE) $(TARGET).bin
 	$(REMOVE) $(OBJ)
 	$(REMOVE) $(LST)
 	$(REMOVE) $(SRC:.c=.s)
