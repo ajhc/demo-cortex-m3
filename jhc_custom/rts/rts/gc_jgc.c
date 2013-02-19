@@ -231,14 +231,9 @@ heap_t A_STD
 
 static heap_t A_STD
 s_monoblock(struct s_arena *arena, unsigned size, unsigned nptrs, unsigned flags) {
-        struct s_block *b = aligned_alloc(size * sizeof(uintptr_t));
-        b->flags = flags | SLAB_MONOLITH;
-        b->color = (sizeof(struct s_block) + BITARRAY_SIZE_IN_BYTES(1) +
-                    sizeof(uintptr_t) - 1) / sizeof(uintptr_t);
-        b->u.m.num_ptrs = nptrs;
-        SLIST_INSERT_HEAD(&arena->monolithic_blocks, b, link);
-        b->used[0] = 1;
-        return (void *)b + b->color*sizeof(uintptr_t);
+	/* Not support. */
+	for (;;);
+	return NULL;
 }
 
 // Allocate an array of count garbage collectable locations in the garbage
@@ -291,26 +286,24 @@ bitset_find_free(unsigned *next_free,int n,bitarray_t ba[static n]) {
         } while (1);
 }
 
+/* static alloced megablock */
+char aligned_megablock_1[MEGABLOCK_SIZE] __attribute__ ((aligned(16)));
+char aligned_megablock_2[MEGABLOCK_SIZE] __attribute__ ((aligned(16)));
+
 static void *
 aligned_alloc(unsigned size) {
-        void *base;
-#if defined(__WIN32__)
-        base = _aligned_malloc(MEGABLOCK_SIZE, BLOCK_SIZE);
-        int ret = !base;
-#elif defined(__ARM_EABI__)
-        base = memalign(BLOCK_SIZE, MEGABLOCK_SIZE);
-        int ret = !base;
-#elif (defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ <  1060)
-        assert(sysconf(_SC_PAGESIZE) == BLOCK_SIZE);
-        base = valloc(MEGABLOCK_SIZE);
-        int ret = !base;
-#else
-        int ret = posix_memalign(&base,BLOCK_SIZE,MEGABLOCK_SIZE);
-#endif
-        if(ret != 0) {
-                abort();
-        }
-        return base;
+	static int count = 0;
+
+	count++;
+	switch (count) {
+	case 1:
+		return aligned_megablock_1;
+	case 2:
+		return aligned_megablock_2;
+	default:
+		;/* FALLTHROUGH */
+	}
+	abort();
 }
 
 struct s_megablock *

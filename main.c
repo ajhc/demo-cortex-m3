@@ -37,16 +37,6 @@ int main(void)
 	SystemInit();
 	NVIC_SetVectorTable(0x3000, 0);
 
-	{ /* Run Haskell code */
-		int hsargc = 1;
-		char *hsargv = "q";
-		char **hsargvp = &hsargv;
-
-		hs_init(&hsargc, &hsargvp);
-		_amain();
-		/* hs_exit(); */
-	}
-	
 	// JTAGを無効にします。
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO , ENABLE);
 	AFIO->MAPR = _BV(26);
@@ -63,6 +53,16 @@ int main(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
+	{ /* Run Haskell code */
+		int hsargc = 1;
+		char *hsargv = "q";
+		char **hsargvp = &hsargv;
+
+		hs_init(&hsargc, &hsargvp);
+		_amain();
+		/* hs_exit(); */
+	}
+
 	// オンボードLEDを交互に点滅させる
 	while(1){
 		GPIOA->ODR = _BV(13);
@@ -77,4 +77,3 @@ int main(void)
 void free(void *ptr) {};
 void *malloc(int size) {return 0;};
 void *realloc(void *ptr, int size) {return 0;}
-void *memalign(int alignment, int size) {return 0;}

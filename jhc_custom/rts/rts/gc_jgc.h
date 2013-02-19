@@ -12,8 +12,8 @@ struct s_cache;
 typedef void* *gc_t;
 typedef void* heap_t;  // a pointer into the GCed heap.
 
-#define BLOCK_SIZE     (1UL << 12)
-#define MEGABLOCK_SIZE (1UL << 20)
+#define BLOCK_SIZE     (1UL << 9)
+#define MEGABLOCK_SIZE (1UL << 12)
 #define S_BLOCK(val) ((struct s_block *)((uintptr_t)(val) & ~(BLOCK_SIZE - 1)))
 #define TO_BLOCKS(x) (((x) + sizeof(uintptr_t) - 1)/sizeof(uintptr_t))
 
