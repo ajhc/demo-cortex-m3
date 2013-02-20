@@ -14,9 +14,10 @@
 
 
 // 空ループでウェイトするルーチン
-void Delay(volatile unsigned long delay)
-{ 
-	while(delay) delay--;
+void Delay(unsigned long delay)
+{
+	volatile unsigned long delay_v = delay;
+	while(delay_v) delay_v--;
 }
 
 
@@ -53,6 +54,7 @@ int main(void)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
+#if 1
 	{ /* Run Haskell code */
 		int hsargc = 1;
 		char *hsargv = "q";
@@ -62,6 +64,7 @@ int main(void)
 		_amain();
 		/* hs_exit(); */
 	}
+#endif
 
 #if 0
 	// オンボードLEDを交互に点滅させる
@@ -74,16 +77,4 @@ int main(void)
 #endif
 	for (;;);
 
-}
-
-void set_gpioa_13()
-{
-	GPIOA->ODR = _BV(13);
-	Delay(500000);
-}
-
-void set_gpioa_15()
-{
-	GPIOA->ODR = _BV(15);
-	Delay(500000);
 }
