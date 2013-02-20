@@ -69,7 +69,7 @@ EXTRAINCDIRS = lib/STM32F10x_StdPeriph_Driver/inc lib/CMSIS/Core/CM3 jhc_custom/
 # gnu89 - c89 plus GCC extensions
 # c99   - ISO C99 standard (not yet fully implemented)
 # gnu99 - c99 plus GCC extensions
-CSTANDARD =
+CSTANDARD = -std=gnu99
 
 # Place -D or -U options here
 CDEFS = -DBUILD=0x`date '+%Y%m%d'`
@@ -93,6 +93,8 @@ CFLAGS += -O$(OPT)
 #CFLAGS += -Wa,-adhlns=$(<:.c=.lst)
 CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += $(CSTANDARD)
+# for jhc
+CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0
 
 STARTUP = lib/CMSIS/Core/CM3/startup_stm32f10x_hd.o
 
