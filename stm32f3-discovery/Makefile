@@ -1,5 +1,5 @@
 # put your *.o targets here, make should handle the rest!
-SRCS = main.c errno.c stm32f3_discovery.c system_stm32f30x.c
+SRCS = main.c errno.c stm32f3_discovery.c system_stm32f30x.c hs_main.c
 
 # all the files will be generated with this name (main.elf, main.bin, main.hex, etc)
 PROJ_NAME=main
@@ -25,8 +25,9 @@ CC=arm-none-eabi-gcc
 OBJCOPY=arm-none-eabi-objcopy
 OBJDUMP=arm-none-eabi-objdump
 SIZE=arm-none-eabi-size
+GDB=arm-none-eabi-gdb
 
-CFLAGS  = -Wall -g -std=c99 -Os  
+CFLAGS  = -Wall -g -std=gnu99 -Os
 CFLAGS += -mlittle-endian -mcpu=cortex-m4  -march=armv7e-m -mthumb
 CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 CFLAGS += -ffunction-sections -fdata-sections
@@ -46,6 +47,8 @@ CFLAGS += -I $(STD_PERIPH_LIB)/CMSIS/Include
 CFLAGS += -I $(STD_PERIPH_LIB)/STM32F30x_StdPeriph_Driver/inc
 CFLAGS += -I $(STD_PERIPH_LIB)/STM32_USB-FS-Device_Driver/inc
 CFLAGS += -include $(STD_PERIPH_LIB)/stm32f30x_conf.h
+CFLAGS += -I . -I $(JHCRTS_LIB)
+CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0 -D_BIG_ENDIAN
 
 SRCS += Device/startup_stm32f30x.s # add startup file to build
 
@@ -67,6 +70,9 @@ lib:
 jhcrts:
 	$(MAKE) -C $(JHCRTS_LIB)
 
+hs_main.c : hs_src/Main.hs
+	jhc -fffi -C -o $@ $<
+
 proj: 	$(PROJ_NAME).elf
 
 $(PROJ_NAME).elf: $(SRCS)
@@ -75,6 +81,12 @@ $(PROJ_NAME).elf: $(SRCS)
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).bin
 	$(OBJDUMP) -St $(PROJ_NAME).elf >$(PROJ_NAME).lst
 	$(SIZE) $(PROJ_NAME).elf
+
+gdb: all
+	@echo '################################################'
+	@echo '##### Use me after running "sudo st-util". #####'
+	@echo '################################################'
+	$(GDB) -x gdb.boot
 
 program: $(PROJ_NAME).bin
 	openocd -f $(OPENOCD_BOARD_DIR)/stm32f3discovery.cfg -f $(OPENOCD_PROC_FILE) -c "stm_flash `pwd`/$(PROJ_NAME).bin" -c shutdown

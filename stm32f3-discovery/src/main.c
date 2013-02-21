@@ -41,7 +41,19 @@ int main(void)
   STM_EVAL_LEDInit(LED8);
   STM_EVAL_LEDInit(LED9);
   STM_EVAL_LEDInit(LED10);
-   
+
+#if 1
+  { /* Run Haskell code */
+	  int hsargc = 1;
+	  char *hsargv = "q";
+	  char **hsargvp = &hsargv;
+
+	  hs_init(&hsargc, &hsargvp);
+	  /* _amain(); */
+	  /* hs_exit(); */
+  }
+#endif
+
   /* Infinite loop */
   while (1)
   {   
@@ -57,7 +69,7 @@ int main(void)
     
     Delay(50); /*500ms - half second*/
     
-    /* LEDs Off */
+    /* LEDs On */
     STM_EVAL_LEDOn(LED3);
     STM_EVAL_LEDOn(LED6);
     STM_EVAL_LEDOn(LED7);
