@@ -6,6 +6,7 @@ PROJ_NAME=main
 
 # Location of the Libraries folder from the STM32F0xx Standard Peripheral Library
 STD_PERIPH_LIB=Libraries
+JHCRTS_LIB=jhc_custom/rts
 
 # Location of the linker scripts
 LDSCRIPT_INC=Device/ldscripts
@@ -58,20 +59,23 @@ OBJS = $(SRCS:.c=.o)
 
 .PHONY: lib proj
 
-all: lib proj
+all: lib jhcrts proj
 
 lib:
 	$(MAKE) -C $(STD_PERIPH_LIB)
 
+jhcrts:
+	$(MAKE) -C $(JHCRTS_LIB)
+
 proj: 	$(PROJ_NAME).elf
 
 $(PROJ_NAME).elf: $(SRCS)
-	$(CC) $(CFLAGS) $^ -o $@ -L$(STD_PERIPH_LIB) -lstm32f3 -L$(LDSCRIPT_INC) -Tstm32f3.ld
+	$(CC) $(CFLAGS) $^ -o $@ -L$(STD_PERIPH_LIB) -lstm32f3 -L$(JHCRTS_LIB) -ljhcrts -L$(LDSCRIPT_INC) -Tstm32f3.ld
 	$(OBJCOPY) -O ihex $(PROJ_NAME).elf $(PROJ_NAME).hex
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).bin
 	$(OBJDUMP) -St $(PROJ_NAME).elf >$(PROJ_NAME).lst
 	$(SIZE) $(PROJ_NAME).elf
-	
+
 program: $(PROJ_NAME).bin
 	openocd -f $(OPENOCD_BOARD_DIR)/stm32f3discovery.cfg -f $(OPENOCD_PROC_FILE) -c "stm_flash `pwd`/$(PROJ_NAME).bin" -c shutdown
 
@@ -83,6 +87,5 @@ clean:
 	rm -f $(PROJ_NAME).bin
 	rm -f $(PROJ_NAME).map
 	rm -f $(PROJ_NAME).lst
-
-reallyclean: clean
 	$(MAKE) -C $(STD_PERIPH_LIB) clean
+	$(MAKE) -C $(JHCRTS_LIB) clean
