@@ -3,5 +3,5 @@ all:
 
 clean:
 	make -C rts-test clean
-	make -C stbee-mini distclean
+	make -C stbee-mini clean
 
