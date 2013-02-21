@@ -67,14 +67,42 @@ int main(void)
 #endif
 
 #if 0
-	// オンボードLEDを交互に点滅させる
-	while(1){
-		GPIOA->ODR = _BV(13);
-	    Delay(500000);
-		GPIOA->ODR = _BV(15);
-	    Delay(500000);
-	}
 #endif
 	for (;;);
 
+}
+
+// オンボードLEDを点滅させる
+
+void
+stopblink_wink()
+{
+	while(1){
+		GPIOA->ODR = _BV(13);
+		Delay(500000);
+		GPIOA->ODR = _BV(15);
+		Delay(500000);
+	}
+}
+
+void
+stopblink_both()
+{
+	while(1){
+		GPIOA->ODR = _BV(13) | _BV(15);
+		Delay(500000);
+		GPIOA->ODR = 0;
+		Delay(500000);
+	}
+}
+
+void
+stopblink_one()
+{
+	while(1){
+		GPIOA->ODR = _BV(13);
+		Delay(500000);
+		GPIOA->ODR = 0;
+		Delay(500000);
+	}
 }
