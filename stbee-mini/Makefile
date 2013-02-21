@@ -285,10 +285,6 @@ hs_main.c : hs_src/Main.hs
 
 
 
-distclean: clean
-	$(MAKE) -C lib clean
-	$(MAKE) -C jhc_custom/rts clean
-
 write2stbeemini: all
 	$(OBJCOPY) -O binary $(TARGET).elf $(TARGET).bin
 	sudo dfu-util -s 0x08003000 -D $(TARGET).bin
@@ -310,7 +306,8 @@ clean:
 	$(REMOVE) $(SRC:.c=.d)
 	$(REMOVE) .dep/*
 	$(REMOVE) hs_main.c
-
+	$(MAKE) -C lib clean
+	$(MAKE) -C jhc_custom/rts clean
 
 
 # Include the dependency files.
