@@ -287,6 +287,9 @@ hs_main.c : hs_src/Main.hs
 
 write2stbeemini: all
 	$(OBJCOPY) -O binary $(TARGET).elf $(TARGET).bin
+	sync
+	sync
+	sync
 	sudo dfu-util -s 0x08003000 -D $(TARGET).bin
 
 # Target: clean project.
