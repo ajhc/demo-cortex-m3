@@ -18,11 +18,17 @@ $(RTS):
 hs_main.c : hs_src/Main.hs
 	jhc -fffi -C -o $@ $<
 
+mtrace.so: mtrace.c
+	gcc -shared -fPIC -o mtrace.so mtrace.c -ldl
+
 test: all
 	./$(TARGET)
 
+test_ldpreload: all mtrace.so
+	LD_PRELOAD=./mtrace.so ./$(TARGET)
+
 clean:
 	make -C jhc_custom/rts clean
-	rm -f $(TARGET) $(OBJ) hs_main.c *~
+	rm -f $(TARGET) $(OBJ) mtrace.so hs_main.c *~
 
 .PHONY: clean test
