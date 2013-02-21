@@ -1,3 +1,4 @@
+include ../../Makefile.inc
 
 # MCU name
 MCU = cortex-m3 -mthumb
@@ -96,12 +97,6 @@ ASFLAGS = -Wa,-gstabs
 
 # Define programs and commands.
 SHELL = sh
-CC = arm-linux-gnueabi-gcc-4.7
-OBJCOPY = arm-linux-gnueabi-objcopy
-OBJDUMP = arm-linux-gnueabi-objdump
-AR = arm-linux-gnueabi-ar
-SIZE = arm-linux-gnueabi-size
-NM = arm-linux-gnueabi-nm
 REMOVE = rm -f
 COPY = cp
 YACC = bison

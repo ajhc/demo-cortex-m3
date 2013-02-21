@@ -1,4 +1,4 @@
-
+include ../Makefile.inc
 
 # MCU name
 MCU = cortex-m3 -mthumb
@@ -183,11 +183,6 @@ DIRLIB = $(DIRAVR)/avr/lib
 
 # Define programs and commands.
 SHELL = sh
-CC = arm-linux-gnueabi-gcc-4.7
-OBJCOPY = arm-linux-gnueabi-objcopy
-OBJDUMP = arm-linux-gnueabi-objdump
-SIZE = arm-linux-gnueabi-size
-NM = arm-linux-gnueabi-nm
 REMOVE = rm -f
 COPY = cp
 YACC = bison

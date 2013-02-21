@@ -1,3 +1,4 @@
+include ../../../../Makefile.inc
 
 # MCU name
 MCU = cortex-m3 -mthumb

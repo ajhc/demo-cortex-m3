@@ -1,3 +1,4 @@
+include ../../Makefile.inc
 # MCU name
 MCU = cortex-m3 -mthumb
 # Target file name (without extension).
@@ -40,17 +41,9 @@ CFLAGS += -O$(OPT)
 CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += $(CSTANDARD)
 # for jhc
-CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0
+CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0 -D_BIG_ENDIAN
 # Define programs and commands.
 SHELL = sh
-CC = arm-linux-gnueabi-gcc-4.7
-LD = arm-linux-gnueabi-ld
-AS = arm-linux-gnueabi-as
-OBJCOPY = arm-linux-gnueabi-objcopy
-OBJDUMP = arm-linux-gnueabi-objdump
-AR = arm-linux-gnueabi-ar
-SIZE = arm-linux-gnueabi-size
-NM = arm-linux-gnueabi-nm
 REMOVE = rm -f
 COPY = cp
 YACC = bison
