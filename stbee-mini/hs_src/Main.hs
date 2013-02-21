@@ -19,11 +19,11 @@ gpioOut v = do
   c_delay 500000
 
 main :: IO ()
-main = forever $ do
-  gpioOut $ (1 `shiftL` 13)
-  gpioOut $ (1 `shiftL` 13) .|. (1 `shiftL` 15)
-  gpioOut $ (1 `shiftL` 15)
-  gpioOut $ 0
+main = forever $ mapM_ gpioOut pat
+  where
+    o13 = (1 `shiftL` 13)
+    o15 = (1 `shiftL` 15)
+    pat = [o13, o13 .|. o15, o15, 0]
 
 {--
 lib/CMSIS/Core/CM3/stm32f10x.h
