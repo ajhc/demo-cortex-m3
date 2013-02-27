@@ -1,5 +1,6 @@
 #include "stm32f30x.h"
 #include "stm32f3_discovery.h"
+#include "jhc_rts_header.h"
 
 /* Private variables ---------------------------------------------------------*/
   RCC_ClocksTypeDef RCC_Clocks;
@@ -49,11 +50,12 @@ int main(void)
 	  char **hsargvp = &hsargv;
 
 	  hs_init(&hsargc, &hsargvp);
-	  /* _amain(); */
+	  _amain();
 	  /* hs_exit(); */
   }
 #endif
 
+#if 0
   /* Infinite loop */
   while (1)
   {   
@@ -81,6 +83,10 @@ int main(void)
     
     Delay(50); /*500ms - half second*/
   }
+#endif
+
+  for (;;);
+  /* NOTREACHED */
 }
 /**
   * @brief  Inserts a delay time.

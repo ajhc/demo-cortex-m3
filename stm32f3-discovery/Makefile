@@ -86,7 +86,7 @@ gdb: all
 	@echo '################################################'
 	@echo '##### Use me after running "sudo st-util". #####'
 	@echo '################################################'
-	$(GDB) -x gdb.boot
+	$(GDB) -x gdb.boot $(PROJ_NAME).elf
 
 program: $(PROJ_NAME).bin
 	openocd -f $(OPENOCD_BOARD_DIR)/stm32f3discovery.cfg -f $(OPENOCD_PROC_FILE) -c "stm_flash `pwd`/$(PROJ_NAME).bin" -c shutdown
