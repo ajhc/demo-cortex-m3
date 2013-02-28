@@ -23,7 +23,7 @@ void SysTick_Handler(void)
 }
 
 #if 1 /* Catch intr. */
-void Reset_Handler(void) {for(;;);}
+/* void Reset_Handler(void) {for(;;);} ** Start program ***/
 void NMI_Handler(void) {for(;;);}
 void HardFault_Handler(void) {for(;;);}
 void MemManage_Handler(void) {for(;;);}
@@ -32,7 +32,7 @@ void UsageFault_Handler(void) {for(;;);}
 void SVC_Handler(void) {for(;;);}
 void DebugMon_Handler(void) {for(;;);}
 void PendSV_Handler(void) {for(;;);}
-// void SysTick_Handler(void) {for(;;);}
+/* void SysTick_Handler(void) {for(;;);} */
 void WWDG_IRQHandler(void) {for(;;);}
 void PVD_IRQHandler(void) {for(;;);}
 void TAMPER_STAMP_IRQHandler(void) {for(;;);}
