@@ -10,3 +10,4 @@ stm32f3-discovery/main.elf
 stm32f3-discovery/main.hex
 stm32f3-discovery/main.lst
 stm32f3-discovery/main.map
+stm32f3-discovery/hs_main.c

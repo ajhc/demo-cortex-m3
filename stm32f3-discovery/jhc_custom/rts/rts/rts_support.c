@@ -31,6 +31,21 @@ hs_set_argv(int argc, char *argv[])
         jhc_progname = argv[0];
 }
 
+void A_NORETURN A_UNUSED A_COLD
+jhc_exit(int n) {
+        abort();
+}
+
+void  A_NORETURN A_UNUSED  A_COLD
+jhc_error(char *s) {
+        abort();
+}
+
+void  A_NORETURN A_UNUSED  A_COLD
+jhc_case_fell_off(int n) {
+        abort();
+}
+
 void jhc_hs_init(void);
 
 static int hs_init_count;
