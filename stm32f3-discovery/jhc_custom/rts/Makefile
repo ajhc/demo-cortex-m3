@@ -5,7 +5,7 @@ AR=arm-none-eabi-ar
 
 vpath %.c rts
 
-CFLAGS  = -g -O2 -Wall
+CFLAGS  = -g -O -Wall
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -march=armv7e-m
 CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 CFLAGS += -ffreestanding -nostdlib

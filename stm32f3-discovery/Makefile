@@ -27,7 +27,7 @@ OBJDUMP=arm-none-eabi-objdump
 SIZE=arm-none-eabi-size
 GDB=arm-none-eabi-gdb
 
-CFLAGS  = -Wall -g -std=gnu99 -Os
+CFLAGS  = -Wall -g -std=gnu99 -O
 CFLAGS += -mlittle-endian -mcpu=cortex-m4  -march=armv7e-m -mthumb
 CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 CFLAGS += -ffunction-sections -fdata-sections
@@ -93,7 +93,7 @@ program: $(PROJ_NAME).bin
 
 clean:
 	find ./ -name '*~' | xargs rm -f	
-	rm -f *.o
+	rm -f *.o hs_main.c
 	rm -f $(PROJ_NAME).elf
 	rm -f $(PROJ_NAME).hex
 	rm -f $(PROJ_NAME).bin
