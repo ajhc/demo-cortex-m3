@@ -25,7 +25,19 @@ void SysTick_Handler(void)
 #if 1 /* Catch intr. */
 /* void Reset_Handler(void) {for(;;);} ** Start program ***/
 void NMI_Handler(void) {for(;;);}
-void HardFault_Handler(void) {for(;;);}
+void HardFault_Handler(void) {
+    __asm volatile
+    (
+        " tst lr, #4                                                \n"
+        " ite eq                                                    \n"
+        " mrseq r0, msp                                             \n"
+        " mrsne r0, psp                                             \n"
+        " ldr r1, [r0, #24]                                         \n"
+        " ldr r2, handler2_address_const                            \n"
+        " bx r2                                                     \n"
+        " handler2_address_const: .word prvGetRegistersFromStack    \n"
+    );
+}
 void MemManage_Handler(void) {for(;;);}
 void BusFault_Handler(void) {for(;;);}
 void UsageFault_Handler(void) {for(;;);}
@@ -99,6 +111,34 @@ void USB_HP_IRQHandler(void) {for(;;);}
 void USB_LP_IRQHandler(void) {for(;;);}
 void USBWakeUp_RMP_IRQHandler(void) {for(;;);}
 void FPU_IRQHandler(void) {for(;;);}
+
+/* These are volatile to try and prevent the compiler/linker optimising them
+away as the variables never actually get used.  If the debugger won't show the
+values of the variables, make them global my moving their declaration outside
+of this function. */
+volatile uint32_t prvGetr0;
+volatile uint32_t prvGetr1;
+volatile uint32_t prvGetr2;
+volatile uint32_t prvGetr3;
+volatile uint32_t prvGetr12;
+volatile uint32_t prvGetlr; /* Link register. */
+volatile uint32_t prvGetpc; /* Program counter. */
+volatile uint32_t prvGetpsr;/* Program status register. */
+
+void prvGetRegistersFromStack( uint32_t *pulFaultStackAddress )
+{
+    prvGetr0  = pulFaultStackAddress[ 0 ];
+    prvGetr1  = pulFaultStackAddress[ 1 ];
+    prvGetr2  = pulFaultStackAddress[ 2 ];
+    prvGetr3  = pulFaultStackAddress[ 3 ];
+    prvGetr12 = pulFaultStackAddress[ 4 ];
+    prvGetlr  = pulFaultStackAddress[ 5 ];
+    prvGetpc  = pulFaultStackAddress[ 6 ];
+    prvGetpsr = pulFaultStackAddress[ 7 ];
+
+    /* When the following line is hit, the variables contain the register values. */
+    for( ;; );
+}
 #endif
 
 /**
