@@ -71,7 +71,7 @@ jhcrts:
 	$(MAKE) -C $(JHCRTS_LIB)
 
 hs_main.c : hs_src/Main.hs
-	jhc -fffi -C -o $@ $<
+	ajhc -fffi -C -o $@ $<
 
 proj: 	$(PROJ_NAME).elf
 

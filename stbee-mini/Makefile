@@ -256,7 +256,7 @@ flash:
 	$(LD) $(STARTUP) $(OBJ) -o $@ $(LDFLAGS) 
 
 hs_main.c : hs_src/Main.hs
-	jhc -fffi -C -o $@ $<
+	ajhc -fffi -C -o $@ $<
 
 # Compile: create object files from C source files.
 %.o : %.c
