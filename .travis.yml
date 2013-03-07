@@ -4,7 +4,7 @@ before_install:
   - cat /proc/cpuinfo
   - sudo apt-get -qq -y install flex bison libgmp3-dev libmpfr-dev libncurses5-dev
   - git clone git://github.com/esden/summon-arm-toolchain
-  - cd summon-arm-toolchain && sudo ./summon-arm-toolchain
+  - cd summon-arm-toolchain && sudo ./summon-arm-toolchain > /dev/null
 script:
   - cd stm32f3-discovery && make
 after_script:
