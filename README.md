@@ -2,15 +2,23 @@
 
 First, you have to know there are several boards supported by the demo.
 
-* [stm32f3-discovery](http://www.st.com/web/en/catalog/tools/FM116/SC959/SS1532/PF254044)
+Using stm32f3-discovery is strongly recommend, so you can use gdb.
+
+## [stm32f3-discovery](http://www.st.com/web/en/catalog/tools/FM116/SC959/SS1532/PF254044)
 
 ![](https://raw.github.com/ajhc/demo-cortex-m3/master/img/stm32f3-discovery.jpg)
 
-* [stbee-mini](http://strawberry-linux.com/catalog/items?code=32105)
+* CPU: STM32F303VCT6
+* ROM: 256kB
+* RAM: 48kB
+
+## [stbee-mini](http://strawberry-linux.com/catalog/items?code=32105)
 
 ![](https://raw.github.com/ajhc/demo-cortex-m3/master/img/stbee-mini-v2.jpg)
 
-Using stm32f3-discovery is strongly recommend, so you can use gdb.
+* CPU: STM32F103CBT6
+* ROM: 128kB
+* RAM: 20kB
 
 ## Common requirements
 
