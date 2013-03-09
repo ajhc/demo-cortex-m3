@@ -83,11 +83,17 @@ $(PROJ_NAME).elf: $(SRCS)
 	$(OBJDUMP) -St $(PROJ_NAME).elf >$(PROJ_NAME).lst
 	$(SIZE) $(PROJ_NAME).elf
 
-gdb: all
+gdbwrite: all
 	@echo '################################################'
 	@echo '##### Use me after running "sudo st-util". #####'
 	@echo '################################################'
-	$(GDB) -x gdb.boot $(PROJ_NAME).elf
+	$(GDB) -x gdbwrite.boot $(PROJ_NAME).elf
+
+gdbattach: all
+	@echo '################################################'
+	@echo '##### Use me after running "sudo st-util". #####'
+	@echo '################################################'
+	$(GDB) -x gdbattach.boot $(PROJ_NAME).elf
 
 program: $(PROJ_NAME).bin
 	openocd -f $(OPENOCD_BOARD_DIR)/stm32f3discovery.cfg -f $(OPENOCD_PROC_FILE) -c "stm_flash `pwd`/$(PROJ_NAME).bin" -c shutdown
