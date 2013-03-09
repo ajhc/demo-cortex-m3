@@ -58,14 +58,22 @@ In another terminal, connect to the debugger and flash program.
 
 ### How to build
 
-xxx Should install dfu-util.
-
-    $ cd stbee-mini/
+    $ git clone git://gitorious.org/~tormod/unofficial-clones/dfuse-dfu-util.git
+    $ cd dfuse-dfu-util/
+    $ ./autogen.sh
+    $ ./configure
+    $ make
+    $ sudo make install
+    $ cd ../stbee-mini/
     $ make
 
 ### Writing to flash
 
-xxx Explain to boot flash mode.
+Press and release the reset switch while holding down the switch user.
+Then release the switch user.
+The hardware will boot with DFU download mode.
+
+Run below command on Linux box to flash program.
 
     $ make write2stbeemini
 
