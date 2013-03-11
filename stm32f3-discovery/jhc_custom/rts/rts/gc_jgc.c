@@ -10,6 +10,9 @@
 gc_t saved_gc;
 struct s_arena *arena;
 char gc_stack_base_area[(1UL << 8)*sizeof(gc_t)] __attribute__ ((aligned(16)));
+/* static alloced megablock */
+char aligned_megablock_1[MEGABLOCK_SIZE] __attribute__ ((aligned(BLOCK_SIZE)));
+char aligned_megablock_2[MEGABLOCK_SIZE] __attribute__ ((aligned(BLOCK_SIZE)));
 static gc_t gc_stack_base = gc_stack_base_area;
 
 #define TO_GCPTR(x) (entry_t *)(FROM_SPTR(x))
@@ -57,7 +60,7 @@ stack_grow(struct stack *s, unsigned grow)
 inline static void
 stack_check(struct stack *s, unsigned n) {
         if(__predict_false(s->size - s->ptr < n)) {
-                stack_grow(s,n + 1024);
+                stack_grow(s,n + 128);
         }
 }
 
@@ -286,10 +289,6 @@ bitset_find_free(unsigned *next_free,int n,bitarray_t ba[static n]) {
                 assert(i != *next_free);
         } while (1);
 }
-
-/* static alloced megablock */
-char aligned_megablock_1[MEGABLOCK_SIZE] __attribute__ ((aligned(16)));
-char aligned_megablock_2[MEGABLOCK_SIZE] __attribute__ ((aligned(16)));
 
 static void *
 aligned_alloc(unsigned size) {
