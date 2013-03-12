@@ -12,7 +12,6 @@ struct s_arena *arena;
 char gc_stack_base_area[(1UL << 8)*sizeof(gc_t)] __attribute__ ((aligned(16)));
 /* static alloced megablock */
 char aligned_megablock_1[MEGABLOCK_SIZE] __attribute__ ((aligned(BLOCK_SIZE)));
-char aligned_megablock_2[MEGABLOCK_SIZE] __attribute__ ((aligned(BLOCK_SIZE)));
 static gc_t gc_stack_base = gc_stack_base_area;
 
 #define TO_GCPTR(x) (entry_t *)(FROM_SPTR(x))
@@ -298,8 +297,6 @@ aligned_alloc(unsigned size) {
 	switch (count) {
 	case 1:
 		return aligned_megablock_1;
-	case 2:
-		return aligned_megablock_2;
 	default:
 		;/* FALLTHROUGH */
 	}
@@ -326,13 +323,6 @@ get_free_block(gc_t gc, struct s_arena *arena) {
                 SLIST_REMOVE_HEAD(&arena->free_blocks,link);
                 return pg;
         } else {
-                if((arena->block_used >= arena->block_threshold)) {
-                        gc_perform_gc(gc);
-                        // if we are still using 80% of the heap after a gc, raise the threshold.
-                        if(__predict_false((unsigned)arena->block_used * 10 >= arena->block_threshold * 9)) {
-                                arena->block_threshold *= 2;
-                        }
-                }
                 if(__predict_false(!arena->current_megablock))
                         arena->current_megablock = s_new_megablock(arena);
                 struct s_megablock *mb = arena->current_megablock;
@@ -458,6 +448,9 @@ s_alloc(gc_t gc, struct s_cache *sc)
        sc->arena->number_allocs++;
 #endif
         struct s_block *pg = SLIST_FIRST(&sc->blocks);
+        if(__predict_false(!pg)) {
+                gc_perform_gc(gc);
+        }
         if(__predict_false(!pg)) {
                 pg = get_free_block(gc, sc->arena);
                 VALGRIND_MAKE_MEM_NOACCESS(pg, BLOCK_SIZE);
