@@ -260,26 +260,6 @@ free(void *ptr)
 	freelist = f;
 }
 
-#if 0
-void
-bcopy(const void *s2, void *s1, size_t n)
-{
-	const char *f = s2;
-	char *t = s1;
-
-	while (n-- > 0)
-		*t++ = *f++;
-}
-
-void
-bzero(void *dstv, size_t length)
-{
-	unsigned char *dst = dstv;
-	while (length-- > 0)
-		*dst++ = 0;
-}
-#endif
-
 void *
 realloc(void *optr, size_t size)
 {

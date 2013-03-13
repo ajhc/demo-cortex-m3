@@ -7,12 +7,11 @@
 
 #if _JHC_GC == _JHC_GC_JGC
 
-gc_t saved_gc;
-struct s_arena *arena;
 char gc_stack_base_area[(1UL << 8)*sizeof(gc_t)] __attribute__ ((aligned(16)));
-/* static alloced megablock */
 char aligned_megablock_1[MEGABLOCK_SIZE] __attribute__ ((aligned(BLOCK_SIZE)));
+struct s_arena *arena;
 static gc_t gc_stack_base = gc_stack_base_area;
+gc_t saved_gc = gc_stack_base_area;
 
 #define TO_GCPTR(x) (entry_t *)(FROM_SPTR(x))
 
@@ -21,7 +20,7 @@ static bool s_set_used_bit(void *val) A_UNUSED;
 static void clear_used_bits(struct s_arena *arena) A_UNUSED;
 static void s_cleanup_blocks(struct s_arena *arena);
 static struct s_block *get_free_block(gc_t gc, struct s_arena *arena);
-static void *aligned_alloc(unsigned size);
+static void *jhc_aligned_alloc(unsigned size);
 
 typedef struct {
         sptr_t ptrs[0];
@@ -193,7 +192,6 @@ static struct s_cache *array_caches_atomic[GC_STATIC_ARRAY_NUM];
 void
 jhc_alloc_init(void) {
         VALGRIND_PRINTF("Jhc-Valgrind mode active.\n");
-        saved_gc = gc_stack_base;
         arena = new_arena();
         if(nh_stuff[0]) {
                 nh_end = nh_start = nh_stuff[0];
@@ -234,9 +232,8 @@ heap_t A_STD
 
 static heap_t A_STD
 s_monoblock(struct s_arena *arena, unsigned size, unsigned nptrs, unsigned flags) {
-	/* Not support. */
-	for (;;);
-	return NULL;
+        /* Not support. */
+        abort();
 }
 
 // Allocate an array of count garbage collectable locations in the garbage
@@ -290,24 +287,24 @@ bitset_find_free(unsigned *next_free,int n,bitarray_t ba[static n]) {
 }
 
 static void *
-aligned_alloc(unsigned size) {
-	static int count = 0;
+jhc_aligned_alloc(unsigned size) {
+        static int count = 0;
 
-	count++;
-	switch (count) {
-	case 1:
-		return aligned_megablock_1;
-	default:
-		;/* FALLTHROUGH */
-	}
-	abort();
+        count++;
+        switch (count) {
+        case 1:
+                return aligned_megablock_1;
+        default:
+                ;/* FALLTHROUGH */
+        }
+        abort();
 }
 
 struct s_megablock *
 s_new_megablock(struct s_arena *arena)
 {
         struct s_megablock *mb = malloc(sizeof(*mb));
-        mb->base = aligned_alloc(MEGABLOCK_SIZE);
+        mb->base = jhc_aligned_alloc(MEGABLOCK_SIZE);
         VALGRIND_MAKE_MEM_NOACCESS(mb->base,MEGABLOCK_SIZE);
         mb->next_free = 0;
         return mb;

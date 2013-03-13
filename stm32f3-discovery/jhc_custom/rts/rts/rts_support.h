@@ -15,6 +15,7 @@ extern char jhc_c_compile[];
 extern char jhc_command[];
 extern char jhc_version[];
 
+void A_NORETURN A_UNUSED A_COLD jhc_exit(int n);
 void A_NORETURN A_UNUSED A_COLD jhc_error(char *s);
 void A_NORETURN A_UNUSED A_COLD jhc_case_fell_off(int n);
 
