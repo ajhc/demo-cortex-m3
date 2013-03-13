@@ -143,7 +143,11 @@ struct fl {
 	struct fl	*next;
 } *freelist;
 
+#ifdef _JHC_MALLOC_HEAP_SIZE
+#define MALLOC_HEAPSIZE _JHC_MALLOC_HEAP_SIZE
+#else
 #define MALLOC_HEAPSIZE (1<<13)
+#endif /* _JHC_MALLOC_HEAP_SIZE */
 char malloc_heapstart[MALLOC_HEAPSIZE];
 char *malloc_heaplimit = (char *) (malloc_heapstart + MALLOC_HEAPSIZE);
 
@@ -151,7 +155,7 @@ char *malloc_heaplimit = (char *) (malloc_heapstart + MALLOC_HEAPSIZE);
 #define HEAP_LIMIT malloc_heaplimit
 static char *top = (char *)HEAP_START;
 
-typedef unsigned long int     uintptr_t;
+// typedef unsigned long int     uintptr_t;
 #define ALIGNBYTES	(sizeof(int) - 1)
 #define	ALIGN(p)	(((uintptr_t)(p) + ALIGNBYTES) & ~ALIGNBYTES)
 
