@@ -13,10 +13,12 @@ CFLAGS += -I.
 CFLAGS += -std=gnu99
 CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0
 CFLAGS += -D_LITTLE_ENDIAN
-# Below detail: http://communities.mentor.com/community/cs/archives/arm-gnu/msg01904.html
-CFLAGS += -DARM_STAY_IN_THUMB_MODE -DJHC_TINY_RTS
+CFLAGS += -D_JHC_ARM_STAY_IN_THUMB_MODE
+CFLAGS += -D_JHC_JGC_STACKGROW=128 -D_JHC_JGC_FIXED_MEGABLOCK
+CFLAGS += -D_JHC_JGC_BLOCK_SHIFT=9 -D_JHC_JGC_MEGABLOCK_SHIFT=13
+CFLAGS += -D_JHC_JGC_NAIVEGC
 
-SRCS = gc_jgc.c jhc_rts.c stableptr.c rts_support.c alloc.c
+SRCS = gc_jgc.c jhc_rts.c stableptr.c rts_support.c
 
 OBJS = $(SRCS:.c=.o)
 

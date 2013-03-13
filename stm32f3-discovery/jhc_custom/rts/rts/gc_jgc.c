@@ -7,11 +7,13 @@
 
 #if _JHC_GC == _JHC_GC_JGC
 
-char gc_stack_base_area[(1UL << 8)*sizeof(gc_t)] __attribute__ ((aligned(16)));
-char aligned_megablock_1[MEGABLOCK_SIZE] __attribute__ ((aligned(BLOCK_SIZE)));
+#ifdef _JHC_JGC_FIXED_MEGABLOCK
+static char aligned_megablock_1[MEGABLOCK_SIZE] __attribute__ ((aligned(BLOCK_SIZE)));
+static char gc_stack_base_area[(1UL << 8)*sizeof(gc_t)];
+#endif
+gc_t saved_gc;
 struct s_arena *arena;
-static gc_t gc_stack_base = gc_stack_base_area;
-gc_t saved_gc = gc_stack_base_area;
+static gc_t gc_stack_base;
 
 #define TO_GCPTR(x) (entry_t *)(FROM_SPTR(x))
 
@@ -58,7 +60,10 @@ stack_grow(struct stack *s, unsigned grow)
 inline static void
 stack_check(struct stack *s, unsigned n) {
         if(__predict_false(s->size - s->ptr < n)) {
-                stack_grow(s,n + 128);
+#ifndef _JHC_JGC_STACKGROW
+#define _JHC_JGC_STACKGROW (1024)
+#endif
+                stack_grow(s,n + (_JHC_JGC_STACKGROW));
         }
 }
 
@@ -192,6 +197,11 @@ static struct s_cache *array_caches_atomic[GC_STATIC_ARRAY_NUM];
 void
 jhc_alloc_init(void) {
         VALGRIND_PRINTF("Jhc-Valgrind mode active.\n");
+#ifdef _JHC_JGC_FIXED_MEGABLOCK
+        saved_gc = gc_stack_base = (void *) gc_stack_base_area;
+#else
+        saved_gc = gc_stack_base = malloc((1UL << 18)*sizeof(gc_stack_base[0]));
+#endif
         arena = new_arena();
         if(nh_stuff[0]) {
                 nh_end = nh_start = nh_stuff[0];
@@ -232,8 +242,14 @@ heap_t A_STD
 
 static heap_t A_STD
 s_monoblock(struct s_arena *arena, unsigned size, unsigned nptrs, unsigned flags) {
-        /* Not support. */
-        abort();
+        struct s_block *b = jhc_aligned_alloc(size * sizeof(uintptr_t));
+        b->flags = flags | SLAB_MONOLITH;
+        b->color = (sizeof(struct s_block) + BITARRAY_SIZE_IN_BYTES(1) +
+                    sizeof(uintptr_t) - 1) / sizeof(uintptr_t);
+        b->u.m.num_ptrs = nptrs;
+        SLIST_INSERT_HEAD(&arena->monolithic_blocks, b, link);
+        b->used[0] = 1;
+        return (void *)b + b->color*sizeof(uintptr_t);
 }
 
 // Allocate an array of count garbage collectable locations in the garbage
@@ -288,23 +304,41 @@ bitset_find_free(unsigned *next_free,int n,bitarray_t ba[static n]) {
 
 static void *
 jhc_aligned_alloc(unsigned size) {
-        static int count = 0;
-
-        count++;
-        switch (count) {
-        case 1:
-                return aligned_megablock_1;
-        default:
-                ;/* FALLTHROUGH */
+        void *base;
+#if defined(__WIN32__)
+        base = _aligned_malloc(MEGABLOCK_SIZE, BLOCK_SIZE);
+        int ret = !base;
+#elif defined(__ARM_EABI__)
+        base = memalign(BLOCK_SIZE, MEGABLOCK_SIZE);
+        int ret = !base;
+#elif (defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) && __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ <  1060)
+        assert(sysconf(_SC_PAGESIZE) == BLOCK_SIZE);
+        base = valloc(MEGABLOCK_SIZE);
+        int ret = !base;
+#else
+        int ret = posix_memalign(&base,BLOCK_SIZE,MEGABLOCK_SIZE);
+#endif
+        if(ret != 0) {
+                fprintf(stderr,"Unable to allocate memory for aligned alloc: %u\n", size);
+                abort();
         }
-        abort();
+        return base;
 }
 
 struct s_megablock *
 s_new_megablock(struct s_arena *arena)
 {
         struct s_megablock *mb = malloc(sizeof(*mb));
+#ifdef _JHC_JGC_FIXED_MEGABLOCK
+        static int count = 0;
+        if (count != 0) {
+                abort();
+        }
+        count++;
+        mb->base = aligned_megablock_1;
+#else
         mb->base = jhc_aligned_alloc(MEGABLOCK_SIZE);
+#endif
         VALGRIND_MAKE_MEM_NOACCESS(mb->base,MEGABLOCK_SIZE);
         mb->next_free = 0;
         return mb;
@@ -320,6 +354,15 @@ get_free_block(gc_t gc, struct s_arena *arena) {
                 SLIST_REMOVE_HEAD(&arena->free_blocks,link);
                 return pg;
         } else {
+#ifndef _JHC_JGC_NAIVEGC
+                if((arena->block_used >= arena->block_threshold)) {
+                        gc_perform_gc(gc);
+                        // if we are still using 80% of the heap after a gc, raise the threshold.
+                        if(__predict_false((unsigned)arena->block_used * 10 >= arena->block_threshold * 9)) {
+                                arena->block_threshold *= 2;
+                        }
+                }
+#endif
                 if(__predict_false(!arena->current_megablock))
                         arena->current_megablock = s_new_megablock(arena);
                 struct s_megablock *mb = arena->current_megablock;
@@ -445,9 +488,11 @@ s_alloc(gc_t gc, struct s_cache *sc)
        sc->arena->number_allocs++;
 #endif
         struct s_block *pg = SLIST_FIRST(&sc->blocks);
+#ifdef _JHC_JGC_NAIVEGC
         if(__predict_false(!pg)) {
                 gc_perform_gc(gc);
         }
+#endif
         if(__predict_false(!pg)) {
                 pg = get_free_block(gc, sc->arena);
                 VALGRIND_MAKE_MEM_NOACCESS(pg, BLOCK_SIZE);
@@ -636,7 +681,29 @@ gc_add_foreignptr_finalizer(wptr_t fp, HsFunPtr finalizer) {
         return true;
 }
 
+void
+print_cache(struct s_cache *sc) {
+        fprintf(stderr, "num_entries: %i with %lu bytes of header\n",
+                (int)sc->num_entries, sizeof(struct s_block) +
+                BITARRAY_SIZE_IN_BYTES(sc->num_entries));
+        fprintf(stderr, "  size: %i words %i ptrs\n",
+                (int)sc->size,(int)sc->num_ptrs);
+#if _JHC_PROFILE
+        fprintf(stderr, "  allocations: %lu\n", (unsigned long)sc->allocations);
+#endif
+        if(SLIST_EMPTY(&sc->blocks) && SLIST_EMPTY(&sc->full_blocks))
+                return;
+        fprintf(stderr, "  blocks:\n");
+        fprintf(stderr, "%20s %9s %9s %s\n", "block", "num_free", "next_free", "status");
+        struct s_block *pg;
+        SLIST_FOREACH(pg,&sc->blocks,link)
+            fprintf(stderr, "%20p %9i %9i %c\n", pg, pg->u.pi.num_free, pg->u.pi.next_free, 'P');
+        SLIST_FOREACH(pg,&sc->full_blocks,link)
+            fprintf(stderr, "%20p %9i %9i %c\n", pg, pg->u.pi.num_free, pg->u.pi.next_free, 'F');
+}
+
 void hs_perform_gc(void) {
         gc_perform_gc(saved_gc);
 }
+
 #endif
