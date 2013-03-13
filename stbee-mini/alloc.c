@@ -143,7 +143,11 @@ struct fl {
 	struct fl	*next;
 } *freelist;
 
-#define MALLOC_HEAPSIZE (1<<12)
+#ifdef _JHC_MALLOC_HEAP_SIZE
+#define MALLOC_HEAPSIZE _JHC_MALLOC_HEAP_SIZE
+#else
+#define MALLOC_HEAPSIZE (1<<13)
+#endif /* _JHC_MALLOC_HEAP_SIZE */
 char malloc_heapstart[MALLOC_HEAPSIZE];
 char *malloc_heaplimit = (char *) (malloc_heapstart + MALLOC_HEAPSIZE);
 
@@ -261,10 +265,13 @@ free(void *ptr)
 }
 
 void *
-realloc(void *ptr, size_t size)
+realloc(void *optr, size_t size)
 {
-	if (NULL != ptr) {
-		free(ptr);
+	void *nptr = malloc(size);
+
+	if (NULL != optr) {
+		// bcopy(optr, nptr, size); // xxx
+		free(optr);
 	}
-	return malloc(size);
+	return nptr;
 }

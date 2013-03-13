@@ -3,8 +3,11 @@ include ../../Makefile.inc
 MCU = cortex-m3 -mthumb
 # Target file name (without extension).
 TARGET = libjhcrts.a
+# jhc RTS path
+JHCRTS_SRC = ../../../jhc_custom/rts
+vpath %.c $(JHCRTS_SRC)/rts
 # List C source files here. (C dependencies are automatically generated.)
-SRC = rts/gc_jgc.c rts/jhc_rts.c rts/stableptr.c rts/rts_support.c rts/alloc.c
+SRC = gc_jgc.c jhc_rts.c stableptr.c rts_support.c
 # Optimization level, can be [0, 1, 2, 3, s]. 
 # 0 = turn off optimization. s = optimize for size.
 OPT = s
@@ -42,6 +45,10 @@ CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += $(CSTANDARD)
 # for jhc
 CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0 -D_BIG_ENDIAN
+CFLAGS += -D_JHC_ARM_STAY_IN_THUMB_MODE
+CFLAGS += -D_JHC_JGC_STACKGROW=128 -D_JHC_JGC_FIXED_MEGABLOCK
+CFLAGS += -D_JHC_JGC_BLOCK_SHIFT=8 -D_JHC_JGC_MEGABLOCK_SHIFT=12
+CFLAGS += -D_JHC_JGC_NAIVEGC
 # Define programs and commands.
 SHELL = sh
 REMOVE = rm -f
@@ -56,7 +63,7 @@ LST = $(SRC:.c=.lst)
 #GENDEPFLAGS = -Wp,-M,-MP,-MT,$(*F).o,-MF,.dep/$(@F).d
 # Combine all necessary flags and optional flags.
 # Add target processor to flags.
-ALL_CFLAGS = -mcpu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)
+ALL_CFLAGS = -mcpu=$(MCU) -I$(JHCRTS_SRC) $(CFLAGS) $(GENDEPFLAGS)
 
 all: $(TARGET)
 

@@ -43,7 +43,7 @@ TARGET = mini-demo
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = main.c stm32f10x_it.c hs_main.c
+SRC = main.c stm32f10x_it.c hs_main.c alloc.c dummy4jhc.c
 
 
 ASRC =
@@ -61,7 +61,9 @@ DEBUG = stabs
 
 # List any extra directories to look for include files here.
 #     Each directory must be seperated by a space.
-EXTRAINCDIRS = lib/STM32F10x_StdPeriph_Driver/inc lib/CMSIS/Core/CM3 jhc_custom/rts
+JHCRTS_LIB=jhc_custom/rts
+JHCRTS_SRC=../jhc_custom/rts
+EXTRAINCDIRS = lib/STM32F10x_StdPeriph_Driver/inc lib/CMSIS/Core/CM3 $(JHCRTS_SRC)
 
 
 # Compiler flag to set the C Standard level.
@@ -161,7 +163,7 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB) $(patsubst %,-L%,$(DIRLIB)) -l
 
 # Define directories, if needed.
 DIRINC = .
-DIRLIB = ./lib/STM32F10x_StdPeriph_Driver ./lib/CMSIS/Core/CM3 ./jhc_custom/rts
+DIRLIB = ./lib/STM32F10x_StdPeriph_Driver ./lib/CMSIS/Core/CM3 $(JHCRTS_LIB)
 
 
 # Define programs and commands.
@@ -209,8 +211,8 @@ sym: $(TARGET).sym
 stdlib:	lib
 	$(MAKE) -C lib
 
-jhcrts: jhc_custom/rts
-	$(MAKE) -C jhc_custom/rts
+jhcrts: $(JHCRTS_LIB)
+	$(MAKE) -C $(JHCRTS_LIB)
 
 # Display size of file.
 HEXSIZE = $(SIZE) --target=$(FORMAT) $(TARGET).hex
@@ -303,7 +305,7 @@ clean:
 	$(REMOVE) .dep/*
 	$(REMOVE) hs_main.c
 	$(MAKE) -C lib clean
-	$(MAKE) -C jhc_custom/rts clean
+	$(MAKE) -C $(JHCRTS_LIB) clean
 
 
 # Include the dependency files.
