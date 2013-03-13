@@ -7,6 +7,7 @@ PROJ_NAME=main
 # Location of the Libraries folder from the STM32F0xx Standard Peripheral Library
 STD_PERIPH_LIB=Libraries
 JHCRTS_LIB=jhc_custom/rts
+JHCRTS_SRC=../jhc_custom/rts
 
 # Location of the linker scripts
 LDSCRIPT_INC=Device/ldscripts
@@ -48,7 +49,7 @@ CFLAGS += -I $(STD_PERIPH_LIB)/CMSIS/Include
 CFLAGS += -I $(STD_PERIPH_LIB)/STM32F30x_StdPeriph_Driver/inc
 CFLAGS += -I $(STD_PERIPH_LIB)/STM32_USB-FS-Device_Driver/inc
 CFLAGS += -include $(STD_PERIPH_LIB)/stm32f30x_conf.h
-CFLAGS += -I . -I $(JHCRTS_LIB)
+CFLAGS += -I . -I $(JHCRTS_SRC)
 CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0 -D_BIG_ENDIAN
 
 SRCS += Device/startup_stm32f30x.s # add startup file to build

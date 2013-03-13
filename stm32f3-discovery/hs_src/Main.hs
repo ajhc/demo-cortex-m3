@@ -35,8 +35,9 @@ ledOn  = poke bsrrPtr
 
 main :: IO ()
 main = forever $ sequence_ dos
+       -- forever $! sequence_ dos -- will crash
   where
-    delays = repeat $ c_delay 3
-    leds = [led3, led4, led5, led6, led7, led8, led9, led10] -- will crash after a few moments
+    delays = repeat $ c_delay 2
+    leds = [led3, led4, led5, led6, led7, led8, led9, led10]
     ledsOnOff = fmap ledOn leds ++ fmap ledOff leds
     dos = concat $ zipWith (\a b -> [a,b]) ledsOnOff delays

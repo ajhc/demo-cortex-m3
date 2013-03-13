@@ -3,13 +3,15 @@ AR=arm-none-eabi-ar
 
 ###########################################
 
-vpath %.c rts
+JHCRTS_SRC = ../../../jhc_custom/rts
+
+vpath %.c $(JHCRTS_SRC)/rts
 
 CFLAGS  = -g -O -Wall
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -march=armv7e-m
 CFLAGS += -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 CFLAGS += -ffreestanding -nostdlib
-CFLAGS += -I.
+CFLAGS += -I$(JHCRTS_SRC)
 CFLAGS += -std=gnu99
 CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0
 CFLAGS += -D_LITTLE_ENDIAN
