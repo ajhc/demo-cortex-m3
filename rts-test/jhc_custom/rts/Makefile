@@ -1,9 +1,15 @@
+JHCRTS_SRC = ../../../jhc_custom/rts
+
+vpath %.c $(JHCRTS_SRC)/rts
+
 TARGET = libjhcrts.a
-SRC = rts/gc_jgc.c rts/jhc_rts.c rts/stableptr.c rts/rts_support.c
+SRC = gc_jgc.c jhc_rts.c stableptr.c rts_support.c profile.c
 OBJ = $(SRC:.c=.o)
-CFLAGS += -I.
-CFLAGS += -std=gnu99
+CFLAGS += -I$(JHCRTS_SRC)
+CFLAGS += -g -std=gnu99
+CFLAGS += -falign-functions=4 -ffast-math -fno-strict-aliasing
 CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0
+CFLAGS += -D_LITTLE_ENDIAN
 
 all: $(TARGET)
 

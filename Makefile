@@ -1,7 +1,8 @@
-all:
-	echo "Only support \"clean\" target."
+SUBDIRS := $(wildcard */)
 
-clean:
-	make -C rts-test clean
-	make -C stbee-mini clean
+all clean:
+	@for i in $(SUBDIRS); do \
+		$(MAKE) -C $$i $@; \
+	done
 
+.PHONY: all clean $(SUBDIRS)
