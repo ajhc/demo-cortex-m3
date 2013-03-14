@@ -107,7 +107,8 @@ morseEncodeIO :: String -> [IO ()]
 morseEncodeIO = concatMap morseToIO . morseEncode
 
 main :: IO ()
-main = forever $ sequence_ dos
+main = do mapM_ ledOff [led3, led4, led5, led6, led7, led8, led9, led10]
+          forever $ sequence_ dos
   where
     rawString = "HELLO WORLD"
     delays = repeat $ c_delay 20
