@@ -62,7 +62,7 @@ DEBUG = stabs
 # List any extra directories to look for include files here.
 #     Each directory must be seperated by a space.
 JHCRTS_LIB=jhc_custom/rts
-JHCRTS_SRC=../jhc_custom/rts
+JHCRTS_SRC=jhc_custom/rts/src
 EXTRAINCDIRS = lib/STM32F10x_StdPeriph_Driver/inc lib/CMSIS/Core/CM3 $(JHCRTS_SRC)
 
 
@@ -211,7 +211,7 @@ sym: $(TARGET).sym
 stdlib:	lib
 	$(MAKE) -C lib
 
-jhcrts: $(JHCRTS_LIB)
+jhcrts: $(JHCRTS_LIB) hs_main.c
 	$(MAKE) -C $(JHCRTS_LIB)
 
 # Display size of file.
@@ -258,7 +258,7 @@ flash:
 	$(LD) $(STARTUP) $(OBJ) -o $@ $(LDFLAGS) 
 
 hs_main.c : hs_src/Main.hs
-	ajhc -fffi -C -o $@ $<
+	ajhc -fffi --tdir=$(JHCRTS_SRC) -C -o $@ $<
 
 # Compile: create object files from C source files.
 %.o : %.c

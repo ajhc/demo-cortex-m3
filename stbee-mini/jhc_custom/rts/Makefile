@@ -4,7 +4,7 @@ MCU = cortex-m3 -mthumb
 # Target file name (without extension).
 TARGET = libjhcrts.a
 # jhc RTS path
-JHCRTS_SRC = ../../../jhc_custom/rts
+JHCRTS_SRC = src
 vpath %.c $(JHCRTS_SRC)/rts
 # List C source files here. (C dependencies are automatically generated.)
 SRC = gc_jgc.c jhc_rts.c stableptr.c rts_support.c
@@ -121,6 +121,7 @@ clean:
 	$(REMOVE) $(SRC:.c=.s)
 	$(REMOVE) $(SRC:.c=.d)
 	$(REMOVE) .dep/*
+	$(REMOVE) -r $(JHCRTS_SRC)
 
 # Include the dependency files.
 #-include $(shell mkdir .dep 2>/dev/null) $(wildcard .dep/*)

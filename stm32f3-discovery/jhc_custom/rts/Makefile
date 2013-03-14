@@ -3,7 +3,7 @@ AR=arm-none-eabi-ar
 
 ###########################################
 
-JHCRTS_SRC = ../../../jhc_custom/rts
+JHCRTS_SRC = src
 
 vpath %.c $(JHCRTS_SRC)/rts
 
@@ -36,4 +36,4 @@ libjhcrts.a: $(OBJS)
 
 clean:
 	rm -f $(OBJS) libjhcrts.a
-
+	rm -rf $(JHCRTS_SRC)

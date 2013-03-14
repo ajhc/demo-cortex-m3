@@ -6,6 +6,7 @@ GRTAGS
 GSYMS
 GTAGS
 */hs_main.c
+*/jhc_custom/rts/src
 stm32f3-discovery/main.bin
 stm32f3-discovery/main.elf
 stm32f3-discovery/main.hex

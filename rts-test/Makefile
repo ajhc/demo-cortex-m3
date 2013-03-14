@@ -1,5 +1,5 @@
 JHCRTS_LIB=jhc_custom/rts
-JHCRTS_SRC=../jhc_custom/rts
+JHCRTS_SRC=jhc_custom/rts/src
 
 TARGET = rts-test
 SRC = main.c hs_main.c
@@ -16,11 +16,11 @@ all: $(TARGET)
 $(TARGET): $(RTS) $(OBJ)
 	gcc $(OBJ) -o $@ $(LDFLAGS)
 
-$(RTS):
+$(RTS): hs_main.c
 	make -C $(JHCRTS_LIB)
 
 hs_main.c : hs_src/Main.hs
-	ajhc -fffi -C -o $@ $<
+	ajhc -fffi --tdir=$(JHCRTS_SRC) -C -o $@ $<
 
 mtrace.so: mtrace.c
 	gcc -shared -fPIC -o mtrace.so mtrace.c -ldl

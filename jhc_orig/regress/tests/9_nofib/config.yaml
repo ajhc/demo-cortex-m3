@@ -1,5 +1,0 @@
-tests:
-  digits-of-e1:
-    args: 1000
-  bernouilli:
-   args: 10

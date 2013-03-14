@@ -1,5 +1,0 @@
-tests:
- Calendar:
-   args: 2034
- constraints:
-   args: 7

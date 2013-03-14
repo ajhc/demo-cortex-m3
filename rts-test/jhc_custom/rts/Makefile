@@ -1,4 +1,4 @@
-JHCRTS_SRC = ../../../jhc_custom/rts
+JHCRTS_SRC = src
 
 vpath %.c $(JHCRTS_SRC)/rts
 
@@ -21,3 +21,4 @@ $(TARGET): $(OBJ)
 
 clean:
 	rm -f $(TARGET) $(OBJ) *~
+	rm -rf $(JHCRTS_SRC)

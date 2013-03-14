@@ -1,6 +1,7 @@
 # Ajhc demo for Cortex-M3 board
 
 First, you have to know there are several boards supported by the demo.
+Second, the demo needs Ajhc 0.8.0.1 or later.
 
 Using stm32f3-discovery is strongly recommend, so you can use gdb.
 
@@ -44,6 +45,8 @@ Using stm32f3-discovery is strongly recommend, so you can use gdb.
     $ ./configure
     $ make
     $ sudo make install
+    $ ajhc --version |head -1
+    ajhc 0.8.0.1 (-0)
 
 ## If you use stm32f3-discovery
 

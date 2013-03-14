@@ -1,2 +1,0 @@
-jhc_flags: --stop parse --stale Main --no-cache
-run: no

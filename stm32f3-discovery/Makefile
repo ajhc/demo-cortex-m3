@@ -7,7 +7,7 @@ PROJ_NAME=main
 # Location of the Libraries folder from the STM32F0xx Standard Peripheral Library
 STD_PERIPH_LIB=Libraries
 JHCRTS_LIB=jhc_custom/rts
-JHCRTS_SRC=../jhc_custom/rts
+JHCRTS_SRC=jhc_custom/rts/src
 
 # Location of the linker scripts
 LDSCRIPT_INC=Device/ldscripts
@@ -69,11 +69,11 @@ all: lib jhcrts proj
 lib:
 	$(MAKE) -C $(STD_PERIPH_LIB)
 
-jhcrts:
+jhcrts: hs_main.c
 	$(MAKE) -C $(JHCRTS_LIB)
 
-hs_main.c : hs_src/Main.hs
-	ajhc -fffi -p containers -C -o $@ $<
+hs_main.c: hs_src/Main.hs
+	ajhc -fffi -p containers --tdir=$(JHCRTS_SRC) -C -o $@ $<
 
 proj: 	$(PROJ_NAME).elf
 
