@@ -147,7 +147,7 @@ Note that the below idiom is used to access Memory-mapped I/O.
     extern volatile void jhc_zeroAddress;
 
 For example,
-[demo-cortex-m3/stm32f3-discovery/hs_src/Main.hs](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/hs_src/Main.hs).
+[demo-cortex-m3/stm32f3-discovery/hs_src/Main.hs](/stm32f3-discovery/hs_src/Main.hs).
 
 ### Call Haskell code from C language code
 
@@ -166,7 +166,7 @@ For example,
     /* --snip-- */
 
 For example,
-[demo-cortex-m3/stm32f3-discovery/src/main.c](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/src/main.c).
+[demo-cortex-m3/stm32f3-discovery/src/main.c](/stm32f3-discovery/src/main.c).
 
 ### Create alloc.c if don't have malloc function
 
@@ -174,14 +174,14 @@ Some software architecture on tiny CPU often have no malloc function.
 But Ajhc's garbage collector (jgc) needs the malloc.
 
 For example,
-[demo-cortex-m3/stm32f3-discovery/src/alloc.c](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/src/alloc.c).
+[demo-cortex-m3/stm32f3-discovery/src/alloc.c](/stm32f3-discovery/src/alloc.c).
 
 ### Add the others as dummy function
 
 Implement the functions that are used by Ajhc's RTS.
 
 For example,
-[demo-cortex-m3/stm32f3-discovery/src/dummy4jhc.c](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/src/dummy4jhc.c).
+[demo-cortex-m3/stm32f3-discovery/src/dummy4jhc.c](/stm32f3-discovery/src/dummy4jhc.c).
 
 ### Modify Makefile on top directory for compiling the Haskell code
 
@@ -208,7 +208,7 @@ and extract Ajhc's RTS source code on "jhc_custom/rts/src" directory.
     # --snip--
 
 For example,
-[demo-cortex-m3/stm32f3-discovery/Makefile](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/Makefile).
+[demo-cortex-m3/stm32f3-discovery/Makefile](/stm32f3-discovery/Makefile).
 
 ### Create Makefile for compiling Ajhc's RTS
 
@@ -239,7 +239,7 @@ Detail of CFLAGS: [Ajhc User's Manual / Special defines to set cflags](http://aj
     # --snip--
 
 For example,
-[demo-cortex-m3/stm32f3-discovery/jhc_custom/rts/Makefile](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/jhc_custom/rts/Makefile).
+[demo-cortex-m3/stm32f3-discovery/jhc_custom/rts/Makefile](/stm32f3-discovery/jhc_custom/rts/Makefile).
 
 ## Original source code
 
