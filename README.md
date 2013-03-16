@@ -5,6 +5,12 @@ Second, the demo needs Ajhc 0.8.0.1 or later.
 
 Using stm32f3-discovery is strongly recommend, so you can use gdb.
 
+## Demo movies
+
+* [Haskell code uses Haskell heap on Cortex-M4. - YouTube](http://www.youtube.com/watch?v=bKp-FC0aeFE)
+* [Haskell code is running on Cortex-M3! - YouTube](http://www.youtube.com/watch?v=3R9sogReVHg)
+* [Don't stop me now! #Ajhc #Haskell #Heap #CortexM4 #STM32 - YouTube](http://www.youtube.com/watch?v=8bEF2fr5b00)
+
 ## [stm32f3-discovery](http://www.st.com/web/en/catalog/tools/FM116/SC959/SS1532/PF254044)
 
 ![](https://raw.github.com/ajhc/demo-cortex-m3/master/img/stm32f3-discovery.jpg)
