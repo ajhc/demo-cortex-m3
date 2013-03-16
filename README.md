@@ -66,7 +66,7 @@ Using stm32f3-discovery is strongly recommend, so you can use gdb.
     $ cd demo-cortex-m3/stm32f3-discovery/
     $ make
 
-### Writing to flash
+### Write to flash
 
 In one terminal, start the connection to the board.
 
@@ -100,7 +100,7 @@ In another terminal, connect to the debugger and flash program.
     $ cd demo-cortex-m3/stbee-mini/
     $ make
 
-### Writing to flash
+### Write to flash
 
 Press and release the reset switch while holding down the user switch.
 Then release the user switch.
@@ -111,6 +111,129 @@ Run below command on Linux box to flash program.
     $ make write2stbeemini
 
 Press and release the reset switch to boot with normal mode.
+
+## Porting the demo to a new platform
+
+### Get base source codes written with C language
+
+C language code is needed to launch Haskell code.
+For example, https://github.com/jeremyherbert/stm32-templates.
+
+### Write Haskell code
+
+    $ mkdir hs_src
+    $ vi hs_src/Main.hs
+
+Note that the below idiom is used to access Memory-mapped I/O.
+
+    $ vi hs_src/Main.hs
+    --snip--
+    foreign import ccall "c_extern.h &jhc_zeroAddress" c_jhc_zeroAddress32 :: Ptr Word32
+    
+    myPtr :: Ptr Word32
+    myPtr = c_jhc_zeroAddress32 `plusPtr` myAddr
+      where myAddr = 0x48001028
+    
+    writeMyPtr :: Word32 -> IO ()
+    writeMyPtr = poke myPtr
+    --snip--
+    $ vi c_extern.h
+    extern volatile void jhc_zeroAddress;
+
+For example,
+[demo-cortex-m3/stm32f3-discovery/hs_src/Main.hs](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/hs_src/Main.hs).
+
+### Call Haskell code from C language code
+
+    $ vi src/main.c
+    int main(void) {
+    /* --snip-- */
+          { /* Run Haskell code */
+               int hsargc = 1;
+               char *hsargv = "t";
+               char **hsargvp = &hsargv;
+               
+               hs_init(&hsargc, &hsargvp);
+               _amain();
+               /* hs_exit(); */
+          }
+    /* --snip-- */
+
+For example,
+[demo-cortex-m3/stm32f3-discovery/src/main.c](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/src/main.c).
+
+### Create alloc.c if don't have malloc function
+
+Some software architecture on tiny CPU often have no malloc function.
+But Ajhc's gc needs the malloc.
+
+For example,
+[demo-cortex-m3/stm32f3-discovery/src/alloc.c](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/src/alloc.c).
+
+### Add the others as dummy function
+
+Implement the functions that are used by Ajhc's RTS.
+
+For example,
+[demo-cortex-m3/stm32f3-discovery/src/dummy4jhc.c](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/src/dummy4jhc.c).
+
+### Modify Makefile on top directory for compiling the Haskell code
+
+Covert Haskell code to C language with Ajhc,
+and extract Ajhc's RTS source code on "jhc_custom/rts/src" directory.
+
+    $ vi Makefile
+    # --snip--
+    JHCRTS_LIB=jhc_custom/rts
+    JHCRTS_SRC=jhc_custom/rts/src
+    SRCS += hs_main.c alloc.c dummy4jhc.c
+    CFLAGS += -Wl,--defsym,jhc_zeroAddress=0
+    
+    all: $(TARGET)
+    
+    $(TARGET): $(SRCS) jhcrts
+    	$(CC) $(CFLAGS) $(SRCS) -o $@ -L$(JHCRTS_LIB) -ljhcrts
+    
+    jhcrts: hs_main.c
+    	$(MAKE) -C $(JHCRTS_LIB)
+    
+    hs_main.c: hs_src/Main.hs
+    	ajhc -fffi --tdir=$(JHCRTS_SRC) -C -o $@ $<
+    # --snip--
+
+For example,
+[demo-cortex-m3/stm32f3-discovery/Makefile](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/Makefile).
+
+### Create Makefile for compiling Ajhc's RTS
+
+Create Makefile for compiling Ajhc's RTS extracted on "jhc_custom/rts/src" directory.
+Detail of CFLAGS: [Ajhc User's Manual / Special defines to set cflags](http://ajhc.github.com/manual.html#special-defines-to-set-cflags).
+
+    $ mkdir -p jhc_custom/rts
+    $ vi jhc_custom/rts/Makefile
+    # --snip--
+    JHCRTS_SRC = src
+    vpath %.c $(JHCRTS_SRC)/rts
+    SRCS = gc_jgc.c jhc_rts.c stableptr.c rts_support.c
+    OBJS = $(SRCS:.c=.o)
+    
+    CFLAGS += -I$(JHCRTS_SRC) -std=gnu99
+    CFLAGS += -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0
+    CFLAGS += -D_JHC_ARM_STAY_IN_THUMB_MODE -D_JHC_JGC_NAIVEGC
+    CFLAGS += -D_JHC_JGC_STACKGROW=128 -D_JHC_JGC_FIXED_MEGABLOCK
+    CFLAGS += -D_JHC_JGC_BLOCK_SHIFT=9 -D_JHC_JGC_MEGABLOCK_SHIFT=14
+    
+    all: libjhcrts.a
+    
+    libjhcrts.a: $(OBJS)
+    	$(AR) -r $@ $(OBJS)
+    
+    %.o : %.c
+    	$(CC) $(CFLAGS) -c -o $@ $^
+    # --snip--
+
+For example,
+[demo-cortex-m3/stm32f3-discovery/jhc_custom/rts/Makefile](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/jhc_custom/rts/Makefile).
 
 ## Original source code
 
