@@ -165,7 +165,7 @@ For example,
 ### Create alloc.c if don't have malloc function
 
 Some software architecture on tiny CPU often have no malloc function.
-But Ajhc's gc needs the malloc.
+But Ajhc's garbage collector (jgc) needs the malloc.
 
 For example,
 [demo-cortex-m3/stm32f3-discovery/src/alloc.c](/ajhc/demo-cortex-m3/blob/master/stm32f3-discovery/src/alloc.c).
