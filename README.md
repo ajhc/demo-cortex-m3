@@ -247,3 +247,4 @@ This demo is based on below original source code.
 
 * https://github.com/mblythe86/stm32f3-discovery-basic-template
 * http://strawberry-linux.com/pub/mini-demo.zip
+* https://github.com/alvarop/arm-gcc-barebones
