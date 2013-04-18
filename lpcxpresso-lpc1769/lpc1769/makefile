@@ -87,7 +87,8 @@ $(FW)/$(BOARD)/board-pins.h: $(FW)/$(BOARD)/board-pins.h.pl
 flash: $(EXECNAME)
 	$(OBJCOPY) -O binary $(EXECNAME) $(PROJ).bin
 	$(FW)/fix-lpcchecksum $(PROJ).bin
-	openocd -f $(FW)/openocd.cfg -c 'flash write_image erase $(PROJ).bin' -c 'verify_image $(PROJ).bin' -c 'reset run'
+#	openocd -f $(FW)/openocd.cfg -c 'flash write_image erase $(PROJ).bin' -c 'verify_image $(PROJ).bin' -c 'reset run'
+	lpc21isp -bin $(PROJ).bin /dev/ttyUSB0 115200 100000
 
 .PHONY : gdb
 gdb:
@@ -95,4 +96,4 @@ gdb:
 
 .PHONY : clean
 clean:
-	rm -r $(OBJS) $(EXECNAME) $(PROJ).hex $(PROJ).bin $(PROJ).map */*~ *~ $(FW)/$(BOARD)/board-pins.h
+	rm -rf $(OBJS) $(EXECNAME) $(PROJ).hex $(PROJ).bin $(PROJ).map */*~ *~ $(FW)/$(BOARD)/board-pins.h
