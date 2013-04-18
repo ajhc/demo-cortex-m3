@@ -1,0 +1,120 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use FindBin qw($Bin $Script);
+use File::Path;
+
+my $TRIM = 1;
+my $DIR = "lpc17xx.cmsis.driver.library";
+my $FN = "$DIR.zip";
+my $URL = "http://ics.nxp.com/support/documents/microcontrollers/zip/$FN";
+
+if (!-f "$Bin/tarballs/$FN") {
+    mkdir "$Bin/tarballs";
+    system("wget", '-O', "tarballs/$FN", $URL) and die "Failed to fetch $URL";
+}
+
+if (!-d $DIR) {
+    system("unzip", "tarballs/$FN") and die "Failed to unzip tarballs/$FN";
+}
+
+my $gccRoot = `which arm-none-eabi-gcc`;
+if (!$gccRoot) {
+    die "Put arm-none-eabi-gcc in the path, if you need to build it run build-toolchain";
+}
+$gccRoot =~ s/\/bin\/[^\/]+$//;
+
+my $gccVersion = `arm-none-eabi-gcc --version`;
+if ($gccVersion =~ /^arm-none-eabi-gcc \(GCC\) (\S+)/) {
+    die "What? $gccVersion" unless $1;
+    $gccVersion = $1;
+} else {
+    die "Failed to parse gcc version info: $gccVersion";
+}
+
+
+
+sub fix {
+    my $d = shift @_;
+
+    opendir D, $d or die "Failed to read directory $d: $!";
+    my @e = grep {!/^\.\.?/} readdir D;
+    closedir D;
+
+    for my $e (@e) {
+
+	# Get rid of spaces in file names, because they make find harder.
+	if ($e =~ / /) {
+	    my $ne = $e;
+	    $ne =~ s/ /-/g;
+	    print "Renaming $d/$e to $d/$ne\n";
+	    rename("$Bin/$d/$e", "$Bin/$d/$ne") or die "Unable to fix name with spaces: '$d/$e': $!";
+	    $e = $ne;
+	}
+
+	my $en = "$d/$e";
+	my $fen = "$Bin/$en";
+
+	# Get rid of windows garbage and generated files.
+	if ($e =~ /\.(exe|bat|dll|hex|elf|map|srec)$/i) {
+	    print "Nuking $en\n";
+	    unlink $fen or die "Failed to clean out garbage: $fen";
+	    next;
+	}
+
+	if (-d $fen) {
+
+	    if ($TRIM and $e =~ /(Keil|EWARM|Lib)/) {
+		print "Nuking $en\n";
+		rmtree($fen);
+	    } else {
+		fix($en);
+	    }
+
+	} elsif (-f $fen) {
+	    next if $e =~ /(png|pdf|chm|jpg|gif)$/;
+
+	    open F, "<$fen" or die "Failed to read $en: $!";
+	    $/ = undef;
+	    my $txt = <F>;
+	    close F;
+	    my $ot = $txt;
+	    
+	    $txt =~ s/\r//g; # Don't use DOS line ends.
+	    $txt =~ s/lpc17xx\.h/LPC17xx.h/gi if $e =~ /(h|c)$/; # Fix include statements to use correct case.
+		$txt =~ s/NONE_BLOCKING/NON_BLOCKING/g;
+
+	    if ($e =~ /^makefile/) {
+		my $nt = '';
+		for my $l (split /\n/, $txt) {
+		    if ($l =~ /^include/) {
+			$l =~ s/\\/\//g;
+		    }
+		    $nt .= "$l\n";
+		}				
+		$txt = $nt;
+
+	    } elsif ($e eq 'makeconfig') {
+		$txt =~ s/^PROJ_ROOT\s*=.*/PROJ_ROOT=$Bin\/$DIR/gm;
+		$txt =~ s/^GNU_INSTALL_ROOT\s*=.*/GNU_INSTALL_ROOT=$gccRoot/gm;
+		$txt =~ s/^GNU_VERSION\s*=.*/GNU_VERSION=$gccVersion/gm;
+
+	    } elsif ($e eq 'make.rules.environment') {		
+		$txt =~ s!\$\(TOOLS_PATH\)\/!!gs;
+	    }
+
+	    if ($txt ne $ot) {
+		print "Fixed $en\n";
+		open F, ">$fen" or die "Failed to write $en: $!";
+		print F $txt;
+		close F;		
+	    }
+	}
+    }
+}
+
+fix $DIR;
+
+exit 0;
+
+

@@ -1,0 +1,207 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use FindBin qw($Bin $Script);
+use File::Path;
+
+my $GNU_MIRROR = 'ftp://ftp.fu-berlin.de/unix/gnu';
+my $NEWLIB_URL = 'ftp://sources.redhat.com/pub/newlib';
+
+my $GCC_VERSION = '4.7.2';
+my $GDB_VERSION = '7.4';
+my $BINUTILS_VERSION = '2.22';
+my $NEWLIB_VERSION = '1.20.0';
+my $OPENOCD_VERSION = '0.5.0';
+
+my $GCC_URL = "$GNU_MIRROR/gcc/gcc-$GCC_VERSION";
+my $GDB_URL = "$GNU_MIRROR/gdb";
+my $BINUTILS_URL = "$GNU_MIRROR/binutils";
+
+my $issue = 'this OS';
+if (open I, "</etc/issue") {
+	$issue = <I>;
+	close I;
+
+	$issue =~ s/\\.*$//g;
+	$issue =~ s/\s+$//g;
+}
+
+if ($issue =~ /^Ubuntu/) {
+
+	if ($issue !~ /^Ubuntu 11.10/) {
+		warn "Notice that this script hasn't been tested on $issue, if it fails, try Ubuntu 11.10 in stead\n";
+	}
+
+	my @missing;
+	for my $p qw'build-essential zlib1g-dev libgmp-dev libmpfr-dev libmpc-dev texinfo libftdi-dev libncurses5-dev libreadline-dev libexpat1-dev' {
+		print "Checking that you have $p\n";
+		push @missing, $p if system("dpkg -s $p > /dev/null");
+	}
+
+	if (@missing) {
+		my $cmd = "sudo apt-get install ".join(' ', @missing);
+		print "You're missing some packages, trying to fix that with: $cmd\n";
+		system($cmd) and die "Failed to install missing packages, please run this command manually: $cmd";		
+	}
+
+} else {
+	warn "Notice that this script hasn't been tested on $issue, if it fails, try Ubuntu 11.10 in stead\n";
+}
+
+my @DIRS = (
+    {
+	dir => "binutils-$BINUTILS_VERSION",
+	url => $BINUTILS_URL,
+	cfg => ['--target=arm-none-eabi', '--enable-interwork', '--enable-multilib'],
+	make => 'make all install',
+    },
+
+    {
+	dir => "gcc-$GCC_VERSION",
+	url => $GCC_URL,
+	cfg => ['--target=arm-none-eabi', '--enable-interwork', '--enable-multilib', '--enable-languages=c,c++',
+		'--with-newlib',
+		"--with-headers=../../src/newlib-$NEWLIB_VERSION/newlib/libc/include",
+		'--with-system-zlib',
+		'--with-cpu=cortex-m3', '--with-mode=thumb',
+	    ],
+	make=>'make all-gcc install-gcc',
+
+	make2=>'make all install',
+    },
+
+    {
+	dir => "newlib-$NEWLIB_VERSION",
+	file => "newlib-$NEWLIB_VERSION.tar.gz",
+	url => $NEWLIB_URL,
+
+	cfg => ['--target=arm-none-eabi', '--enable-interwork', '--enable-multilib',
+		'--with-cpu=cortex-m3', '--with-mode=thumb', '--disable-newlib-supplied-syscalls'
+	    ],
+	make => 'make all install',
+    },
+
+    {
+	dir => "gdb-$GDB_VERSION",
+	url => $GDB_URL,
+	
+	cfg2=>['--target=arm-none-eabi', '--enable-interwork', '--enable-multilib'],
+	make2=>'make all install',
+    },
+
+    {
+	dir=> "openocd-$OPENOCD_VERSION",
+	url=>"http://downloads.sourceforge.net/project/openocd/openocd/$OPENOCD_VERSION/openocd-$OPENOCD_VERSION.tar.bz2?use_mirror=autoselect",
+
+	inplace=>1,
+	patch=>'openocd-0.5.0-fix.patch',
+	cfg=>['--enable-ft2232_libftdi', '--enable-jlink', 
+	     # '--enable-buspirate'
+	    ],
+	make=>'make all install',
+    },
+);
+
+my $tarDir = "$Bin/tarballs";
+mkdir $tarDir;
+
+# Do all the downloading up front, so we get that out of the way.
+for my $d (@DIRS) {
+    $d->{file} //= "$d->{dir}.tar.bz2";
+
+    my $fn = "$tarDir/$d->{file}";
+    my $url = "$d->{url}/$d->{file}";
+
+    if (-f $fn) {
+	print "You already have $d->{file}, skipping\n";
+    } else {
+	system("wget", "-O", $fn, $url) and die "Failed to fetch $d->{file} from $url";
+	die "Did not find the expected file: $fn" unless -f $fn;
+    }
+}
+
+
+# Unpack, configure, build and install each package.
+my $srcDir = "$Bin/src";
+mkdir $srcDir;
+my $buildDir = "$Bin/build";
+mkdir $buildDir;
+my $installDir = "$Bin/arm-toolchain";
+mkdir $installDir;
+
+$ENV{PATH} = "$ENV{PATH}:$installDir/bin";
+
+# Unpack all at sources once.
+for my $d (@DIRS) {
+    my $fn = "$tarDir/$d->{file}";
+    my $dn = "$srcDir/$d->{dir}";
+ 
+    if (-d $dn) {
+	print "Already unpacked $d->{dir}, skipping unpack\n";
+    } else {
+	print "Unpacking $fn\n";
+	chdir $srcDir;
+	system("tar", "xf", $fn) and die "Failed to unpack $fn into $srcDir";
+	mkdir $dn;
+	
+	if ($d->{patch}) {
+	    chdir $dn;
+	    system("patch -p 1 < $Bin/$d->{patch}") and die "Failed to apply patch: $d->{patch}";
+	}
+    }
+}
+
+# Do the actual building, first pass
+for my $d (@DIRS) {
+    my $fn = "$tarDir/$d->{file}";
+    my $dn = "$srcDir/$d->{dir}";
+    my $bn = "$buildDir/$d->{dir}";
+    
+    next if -f "$bn.done"; # Lazyness ftw.
+    
+    rmtree $bn;
+    mkdir $bn;
+    if ($d->{inplace}) {
+	chdir $dn; # Build in the source directory, needed for borken packages
+    } else {
+	chdir $bn; # Build in a separate tree, because it's nice not to mess up the source tree.
+    }    
+
+    next unless $d->{make} and $d->{cfg};
+
+    my @cfg = (@{$d->{cfg}}, "--prefix=$installDir");
+    print "Running: $bn> $dn/configure ".join(' ',@cfg)."\n";
+    system("$dn/configure", @cfg) and die "Failed to configure in $bn";
+
+    print "Running: $bn> $d->{make}\n";
+    system($d->{make}) and die "Failed to run $d->{make} in $bn";  
+    open D, ">$bn.done";
+    close D;
+}
+
+# Second pass, needed because we need to hit gcc twice, before and after building newlib.
+for my $d (@DIRS) {
+    my $fn = "$tarDir/$d->{file}";
+    my $dn = "$srcDir/$d->{dir}";
+    my $bn = "$buildDir/$d->{dir}";
+    
+    next unless $d->{make2};
+
+    next if -f "$bn.done2"; # Lazyness ftw.
+    chdir $bn;
+    
+    if ($d->{cfg2}) {
+	my @cfg = (@{$d->{cfg2}}, "--prefix=$installDir");
+	print "Running2: $bn> $dn/configure ".join(' ',@cfg)."\n";
+	system("$dn/configure", @cfg) and die "Failed to configure in $bn";
+    }
+    print "Running2: $bn> $d->{make2}\n";
+    system($d->{make2}) and die "Failed to run2 $d->{make2} in $bn";  
+    open D, ">$bn.done2";
+    close D;
+}
+
+print "\n\nAll done, toolchain can be found in $installDir\n";
+print "Add to path with: export PATH=\${PATH}:$installDir/bin\n";
+exit 0;
+

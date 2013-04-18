@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use FindBin qw($Bin $Script);
+
+my ($bfn) = @ARGV;
+die "Syntax: $Script <bin file to fix>" unless $bfn and -f $bfn;
+
+open BIN, "<$bfn" or die "Unable to read $bfn: $!";
+my $vectors;
+read(BIN, $vectors, 8*4) == 8*4 or die "Failed to read vectors";
+my @vectors = unpack("L"x8, $vectors);
+print "Existing vectors: ".join(' ', map {sprintf("%08x", $_)} @vectors[0..6])."\n";
+close BIN;
+print "Existing checksum: ".sprintf("%08x", $vectors[7])."\n";
+
+my $cs = 0;
+for my $v (@vectors[0..6]) {
+    $cs -= $v;
+}
+
+$cs &= 0xffffffff;
+
+print "Correct  checksum: ".sprintf("%08x", $cs)."\n";
+
+if ($cs ne $vectors[7]) {
+    print "Fixing checksum\n";
+
+    open BIN, "+<$bfn" or die "Unable to write $bfn: $!";
+    seek(BIN, 7*4, 0);    
+    print BIN pack("L", $cs);
+    close BIN;    
+}

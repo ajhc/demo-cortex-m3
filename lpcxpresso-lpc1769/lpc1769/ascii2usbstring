@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+for my $l (@ARGV) {
+    my @ch = split //, $l;
+    print ((scalar(@ch)*2+2).", DESC_STRING, ");
+    for my $c (@ch) {
+	print "'$c', 0, ";
+    }
+    print "\n";
+}

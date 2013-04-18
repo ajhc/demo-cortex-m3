@@ -1,0 +1,94 @@
+Only in openocd-0.5.0.fixed: config.h
+Only in openocd-0.5.0.fixed: config.log
+Only in openocd-0.5.0.fixed: config.status
+Only in openocd-0.5.0.fixed/doc: Makefile
+Only in openocd-0.5.0.fixed/jimtcl: config.log
+Only in openocd-0.5.0.fixed/jimtcl: configure.gnu
+Only in openocd-0.5.0.fixed/jimtcl: jimautoconf.h
+Only in openocd-0.5.0.fixed/jimtcl: jim-config.h
+Only in openocd-0.5.0.fixed/jimtcl: Makefile
+Only in openocd-0.5.0.fixed: libtool
+Only in openocd-0.5.0.fixed: Makefile
+Only in openocd-0.5.0.fixed/src: .deps
+Only in openocd-0.5.0.fixed/src/flash: .deps
+Only in openocd-0.5.0.fixed/src/flash: Makefile
+Only in openocd-0.5.0.fixed/src/flash/nand: .deps
+Only in openocd-0.5.0.fixed/src/flash/nand: Makefile
+Only in openocd-0.5.0.fixed/src/flash/nor: .deps
+Only in openocd-0.5.0.fixed/src/flash/nor: Makefile
+Only in openocd-0.5.0.fixed/src/helper: .deps
+Only in openocd-0.5.0.fixed/src/helper: Makefile
+Only in openocd-0.5.0.fixed/src/jtag: .deps
+Only in openocd-0.5.0.fixed/src/jtag/drivers: .deps
+Only in openocd-0.5.0.fixed/src/jtag/drivers: Makefile
+Only in openocd-0.5.0.fixed/src/jtag: Makefile
+Only in openocd-0.5.0.fixed/src: Makefile
+Only in openocd-0.5.0.fixed/src/pld: .deps
+Only in openocd-0.5.0.fixed/src/pld: Makefile
+Only in openocd-0.5.0.fixed/src/rtos: .deps
+Only in openocd-0.5.0.fixed/src/rtos: Makefile
+Only in openocd-0.5.0.fixed/src/server: .deps
+Only in openocd-0.5.0.fixed/src/server: Makefile
+Only in openocd-0.5.0.fixed/src/svf: .deps
+Only in openocd-0.5.0.fixed/src/svf: Makefile
+diff -ur openocd-0.5.0/src/target/armv7m.c openocd-0.5.0.fixed/src/target/armv7m.c
+--- openocd-0.5.0/src/target/armv7m.c	2011-08-09 07:34:19.000000000 +0200
++++ openocd-0.5.0.fixed/src/target/armv7m.c	2012-02-12 15:54:04.000000000 +0100
+@@ -254,7 +254,7 @@
+ 	struct armv7m_common *armv7m = target_to_armv7m(target);
+ 	int i;
+ 
+-	*reg_list_size = 26;
++	*reg_list_size = 17;
+ 	*reg_list = malloc(sizeof(struct reg*) * (*reg_list_size));
+ 
+ 	/*
+@@ -264,26 +264,11 @@
+ 	 *  - (obsolete) FPA status
+ 	 *  - CPSR
+ 	 */
+-	for (i = 0; i < 16; i++)
++	for (i = 0; i < 17; i++)
+ 	{
+ 		(*reg_list)[i] = &armv7m->core_cache->reg_list[i];
+ 	}
+ 
+-	for (i = 16; i < 24; i++)
+-		(*reg_list)[i] = &arm_gdb_dummy_fp_reg;
+-	(*reg_list)[24] = &arm_gdb_dummy_fps_reg;
+-
+-#ifdef ARMV7_GDB_HACKS
+-	/* use dummy cpsr reg otherwise gdb may try and set the thumb bit */
+-	(*reg_list)[25] = &armv7m_gdb_dummy_cpsr_reg;
+-
+-	/* ARMV7M is always in thumb mode, try to make GDB understand this
+-	 * if it does not support this arch */
+-	*((char*)armv7m->arm.pc->value) |= 1;
+-#else
+-	(*reg_list)[25] = &armv7m->core_cache->reg_list[ARMV7M_xPSR];
+-#endif
+-
+ 	return ERROR_OK;
+ }
+ 
+Only in openocd-0.5.0.fixed/src/target: armv7m.c~
+Only in openocd-0.5.0.fixed/src/target: armv7m.c.orig
+diff -ur openocd-0.5.0/src/target/armv7m.h openocd-0.5.0.fixed/src/target/armv7m.h
+--- openocd-0.5.0/src/target/armv7m.h	2011-08-09 07:34:19.000000000 +0200
++++ openocd-0.5.0.fixed/src/target/armv7m.h	2012-02-12 15:53:02.000000000 +0100
+@@ -30,7 +30,7 @@
+ #include "arm.h"
+ 
+ /* define for enabling armv7 gdb workarounds */
+-#if 1
++#if 0
+ #define ARMV7_GDB_HACKS
+ #endif
+ 
+Only in openocd-0.5.0.fixed/src/target: .deps
+Only in openocd-0.5.0.fixed/src/target: Makefile
+Only in openocd-0.5.0.fixed/src/transport: .deps
+Only in openocd-0.5.0.fixed/src/transport: Makefile
+Only in openocd-0.5.0.fixed/src/xsvf: .deps
+Only in openocd-0.5.0.fixed/src/xsvf: Makefile
+Only in openocd-0.5.0.fixed: stamp-h1
