@@ -11,6 +11,7 @@ MAPFILE=$(PROJ).map
 -include $(HOME)/.makefile
 
 FW = ../lpc1769
+JHCRTS_SRC = jhc_rts
 
 CSRC  = $(wildcard $(FW)/drivers/*.c)
 CSRC += $(wildcard $(FW)/lpcusb/*.c)
@@ -20,6 +21,9 @@ CSRC += $(wildcard $(FW)/$(BOARD)/*.c)
 CSRC += $(wildcard $(FW)/*.c)
 CSRC += $(wildcard *.c)
 CSRC += $(wildcard */*.c)
+CSRC += jhc_rts/rts/gc_jgc.c jhc_rts/rts/jhc_rts.c jhc_rts/rts/stableptr.c
+CSRC += jhc_rts/rts/rts_support.c hs_main.c
+
 
 CPSRC  = $(wildcard $(FW)/drivers/*.cpp)
 CPSRC += $(wildcard $(FW)/$(BOARD)/*.cpp)
@@ -41,7 +45,7 @@ CODESIZE                = arm-none-eabi-size
 GDB                     = arm-none-eabi-gdb
 
 CFLAGS                  = 
-CFLAGS			+= -std=c99
+CFLAGS			+= -std=gnu99
 CFLAGS			+= -Werror
 CFLAGS                  += -Wall 
 CFLAGS                  += -mcpu=cortex-m3
@@ -61,6 +65,11 @@ CFLAGS                  += -ffunction-sections
 CFLAGS                  += -fdata-sections 
 CFLAGS                  += -fno-asynchronous-unwind-tables -fno-unwind-tables
 CFLAGS                  += -I$(FW) -I$(FW)/drivers -I$(FW)/$(BOARD)
+CFLAGS                  += -Ijhc_rts -I. -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0
+CFLAGS                  += -D_JHC_ARM_STAY_IN_THUMB_MODE -D_JHC_JGC_NAIVEGC
+CFLAGS                  += -D_JHC_JGC_STACKGROW=128 -D_JHC_JGC_FIXED_MEGABLOCK
+CFLAGS                  += -D_JHC_JGC_BLOCK_SHIFT=9 -D_JHC_JGC_MEGABLOCK_SHIFT=14
+CFLAGS                  += -D_LITTLE_ENDIAN -Wl,--defsym,jhc_zeroAddress=0
 
 LDFLAGS = -static -mcpu=cortex-m3 -mthumb -mthumb-interwork -Wl,--start-group 
 #LDFLAGS += -L$(THUMB2GNULIB) -L$(THUMB2GNULIB2)
@@ -73,7 +82,7 @@ LDFLAGS += -T $(FW)/lpc1769.ld
 LDFLAGS += -Xlinker -Map -Xlinker $(PROJ).map
 
 .PHONY : all
-all: $(EXECNAME)
+all: hs_main.c $(EXECNAME)
 
 $(EXECNAME): $(FW)/$(BOARD)/board-pins.h $(OBJS)
 	$(LD) $(OBJS) $(LDFLAGS) -o $(EXECNAME)
@@ -82,6 +91,9 @@ $(EXECNAME): $(FW)/$(BOARD)/board-pins.h $(OBJS)
 
 $(FW)/$(BOARD)/board-pins.h: $(FW)/$(BOARD)/board-pins.h.pl
 	 $(FW)/$(BOARD)/board-pins.h.pl
+
+hs_main.c: Main.hs
+	ajhc -fffi --tdir=$(JHCRTS_SRC) -C -o $@ $<
 
 .PHONY : flash
 flash: $(EXECNAME)
@@ -96,4 +108,5 @@ gdb:
 
 .PHONY : clean
 clean:
-	rm -rf $(OBJS) $(EXECNAME) $(PROJ).hex $(PROJ).bin $(PROJ).map */*~ *~ $(FW)/$(BOARD)/board-pins.h
+	rm -rf $(OBJS) $(EXECNAME) $(PROJ).hex $(PROJ).bin $(PROJ).map */*~ *~ $(FW)/$(BOARD)/board-pins.h hs_main.c
+	rm -rf jhc_rts
