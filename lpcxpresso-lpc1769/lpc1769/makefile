@@ -50,7 +50,7 @@ CFLAGS			+= -Werror
 CFLAGS                  += -Wall 
 CFLAGS                  += -mcpu=cortex-m3
 CFLAGS                  += -mthumb 
-CFLAGS                  += -O2
+CFLAGS                  += -O
 CFLAGS                  += -mapcs-frame 
 CFLAGS                  += -D__thumb2__=1 
 CFLAGS                  += -D__RAM_MODE__=0
@@ -69,7 +69,7 @@ CFLAGS                  += -Ijhc_rts -I. -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_S
 CFLAGS                  += -D_JHC_ARM_STAY_IN_THUMB_MODE -D_JHC_JGC_NAIVEGC
 CFLAGS                  += -D_JHC_JGC_STACKGROW=128 -D_JHC_JGC_FIXED_MEGABLOCK
 CFLAGS                  += -D_JHC_JGC_BLOCK_SHIFT=9 -D_JHC_JGC_MEGABLOCK_SHIFT=14
-CFLAGS                  += -D_LITTLE_ENDIAN -Wl,--defsym,jhc_zeroAddress=0
+CFLAGS                  += -D_LITTLE_ENDIAN
 
 LDFLAGS = -static -mcpu=cortex-m3 -mthumb -mthumb-interwork -Wl,--start-group 
 #LDFLAGS += -L$(THUMB2GNULIB) -L$(THUMB2GNULIB2)
@@ -80,6 +80,7 @@ LDFLAGS += -Wl,--gc-sections
 #LDFLAGS += -Wl,--print-gc-sections 
 LDFLAGS += -T $(FW)/lpc1769.ld
 LDFLAGS += -Xlinker -Map -Xlinker $(PROJ).map
+LDFLAGS += -Wl,--defsym,jhc_zeroAddress=0
 
 .PHONY : all
 all: hs_main.c $(EXECNAME)

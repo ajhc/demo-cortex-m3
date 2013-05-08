@@ -4,34 +4,29 @@ import Control.Monad
 import Foreign.Ptr
 import Foreign.Storable
 
-foreign import ccall "c_extern.h delay" c_delay :: Word32 -> IO ()
-foreign import ccall "c_extern.h &jhc_zeroAddress" c_jhc_zeroAddress16 :: Ptr Word16
+foreign import ccall "c_extern.h &jhc_zeroAddress" c_jhc_zeroAddress32 :: Ptr Word32
+foreign import ccall "c_extern.h delay"    c_delay    :: Word32 -> IO ()
+foreign import ccall "c_extern.h led2_on"  c_led2_on  :: IO ()
+foreign import ccall "c_extern.h led2_off" c_led2_off :: IO ()
 
-gpioPin8, gpioPin9, gpioPin10, gpioPin11, gpioPin12, gpioPin13, gpioPin14, gpioPin15, led3, led4, led5, led6, led7, led8, led9, led10 :: Word16
-gpioPin8  = 0x0100
-gpioPin9  = 0x0200
-gpioPin10 = 0x0400
-gpioPin11 = 0x0800
-gpioPin12 = 0x1000
-gpioPin13 = 0x2000
-gpioPin14 = 0x4000
-gpioPin15 = 0x8000
-led3  = gpioPin9
-led4  = gpioPin8
-led5  = gpioPin10
-led6  = gpioPin15
-led7  = gpioPin11
-led8  = gpioPin14
-led9  = gpioPin12
-led10 = gpioPin13
+lpcGpio0Fioset, lpcGpio0Fioclr :: Ptr Word32
+lpcGpio0Fioset = c_jhc_zeroAddress32 `plusPtr` 0x2009c024
+lpcGpio0Fioclr = c_jhc_zeroAddress32 `plusPtr` 0x2009c028
 
-brrPtr, bsrrPtr :: Ptr Word16
-brrPtr  = c_jhc_zeroAddress16 `plusPtr` 0x48001028
-bsrrPtr = c_jhc_zeroAddress16 `plusPtr` 0x48001018
+led2 :: Word32
+led2 = 0x400000
 
-ledOff, ledOn :: Word16 -> IO ()
-ledOff = poke brrPtr
-ledOn  = poke bsrrPtr
+ledOff, ledOn :: Word32 -> IO ()
+{-
+ledOff = poke lpcGpio0Fioclr
+ledOn  = poke lpcGpio0Fioset
+-}
+ledOn = const c_led2_on
+ledOff = const c_led2_off
 
 main :: IO ()
-main = return ()
+main = forever $ do
+  ledOn led2
+  c_delay 200
+  ledOff led2
+  c_delay 200
