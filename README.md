@@ -19,6 +19,14 @@ Using stm32f3-discovery is strongly recommend, so you can use gdb.
 * ROM: 256kB
 * RAM: 48kB
 
+## [LPCXpresso Board for LPC1769](http://www.nxp.com/demoboard/OM13000.html)
+
+![](https://raw.github.com/ajhc/demo-cortex-m3/master/img/lpcxpresso-lpc1769.jpg)
+
+* CPU: LPC1769
+* ROM: 512kB
+* RAM: 64kB
+
 ## [stbee-mini](http://strawberry-linux.com/catalog/items?code=32105)
 
 ![](https://raw.github.com/ajhc/demo-cortex-m3/master/img/stbee-mini-v2.jpg)
