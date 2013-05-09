@@ -97,6 +97,38 @@ In another terminal, connect to the debugger and flash program.
     Transfer rate: 6 KB/sec, 2786 bytes/write.
     (gdb) c
 
+## If you use LPCXpresso Board for LPC1769
+
+### Get debug board
+
+LPC-Link is not used with Linux Host.
+A debug board is needed for writing firmware to LPCXpresso Board.
+You can get more infomation from blew links.
+
+* [Prototype to hardware | mbed](http://mbed.org/users/chris/notebook/prototype-to-hardware/)
+* [LPCXpresso LPC1768登場 - Lynx-EyEDの電音鍵盤 新館](http://lynxeyed.hatenablog.com/entry/20100810/1281423414)
+
+### Install lpc21isp
+
+    $ svn co https://lpc21isp.svn.sourceforge.net/svnroot/lpc21isp
+    $ cd lpc21isp/
+    $ make
+    $ sudo cp lpc21isp /usr/local/bin/
+
+### How to build
+
+    $ git clone git://github.com/ajhc/demo-cortex-m3.git
+    $ cd demo-cortex-m3/lpcxpresso-lpc1769/blinky/
+    $ make
+
+### Write to flash
+
+Connect up the LPCXpresso Board to PC with USB cable.
+Then 
+Finally, flash program with below command.
+
+    $ make flash
+
 ## If you use stbee-mini
 
 ### Install dfu-util
