@@ -124,10 +124,15 @@ You can get more infomation from blew links.
 ### Write to flash
 
 Connect up the LPCXpresso Board to PC with USB cable.
-Then 
-Finally, flash program with below command.
+Pull nReset low to put the LPC1769 into reset.
+Pull the ISP pin (P0.14) low.
+Pull nReset high, LPC1769 will be boot with ISP mode.
+
+Then, flash program with below command.
 
     $ make flash
+
+Pull nReset low, and pull nReset high.
 
 ## If you use stbee-mini
 
