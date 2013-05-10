@@ -79,111 +79,16 @@ int main(void)
 
     usart_1_init();
 
-#ifndef WIFI_CONNECTED
-    /* Output a message on Hyperterminal using printf function */
-    cio_printf("%s", welcome_msg);
-#else
-    wifi_intit_pins();
-    wifi_init_connections();
-    
-    // If the button is pressed on power on,
-    // do not init the WiFi module to keep current WiFi connections
-    // and save development time
-    if (!STM_EVAL_PBGetState(BUTTON_USER))
-        wifi_init_ap_mode();
-#endif
-
     while (1)
     {
-        // Everything should be non-blocking
-
-#ifndef WIFI_CONNECTED
-        if (serve_command_promt(line_buffer, LINEBUFFERSIZE, "microcli> ") > 0)
-        {
-            shell_process(line_buffer);
-        }
-#else
-        if (wifi_get_msg(line_buffer, LINEBUFFERSIZE, &cid) > 0)
-        {
-            bool add_header = (cid != -1); // send back to the current connection
-            if (add_header)
-            {
-                cio_printf("\x1bS%c", cid);
-                cio_printf("microcli> %s\r\n", line_buffer);
-            }
-            shell_process(line_buffer);
-
-            if (add_header)
-            {
-                cio_print("[end]\r\n");
-                cio_print("\x1b" "E");
-            }
-        }
-#endif
-
-        if (timeout_0 == 0)
-        {
-            static uint8_t counter = 0;
-            switch (counter++)
-            {
-            case 0:
-                /* Toggle LED4 */
-                if (options.elements[TOGGLE_LEDS_IDX].value == 1)
-                    STM_EVAL_LEDToggle(LED4);
-                break;
-            case 1:
-                /* Toggle LED3 */
-                if (options.elements[TOGGLE_LEDS_IDX].value == 1)
-                    STM_EVAL_LEDToggle(LED3);
-                break;
-            case 2:
-                break;
-            default:
-                counter = 0;
-            }
-            timeout_0 = TIMEOUT_0_DEFAULT;
-        }
-        
-        if (options.elements[REALTIME_MSG_IDX].value == 1)
-        {
-            enum {WAITFOR_PRESSED, WAITFOR_RELEASED};
-            static uint8_t what = WAITFOR_PRESSED;
-            char msg[30];
-            msg[0] = '\0';
-            if (what == WAITFOR_PRESSED)
-            {
-                if (UserButtonPressed != 0x00) // Interrupt based, don't miss an event
-                //if (STM_EVAL_PBGetState(BUTTON_USER) == 1)
-                {
-                    strcpy(msg, "User button pressed");
-                    what = WAITFOR_RELEASED;
-                }
-            }
-            else if (what == WAITFOR_RELEASED)
-            {
-                if (STM_EVAL_PBGetState(BUTTON_USER) == 0)
-                {
-                    UserButtonPressed = 0x00;
-                    strcpy(msg, "User button released");
-                    what = WAITFOR_PRESSED;
-                }
-            }
-            if (msg[0] != '\0')
-            {
-#ifndef WIFI_CONNECTED
-                cio_printf("\r\n[info] %s %i\r\n", msg, uptime);
-#else
-                // send message to each client
-                for(int i=0; i<16; i++)
-                {
-                    if(wifi_connections[i].state == CONNECTED)
-                    {
-                        cio_printf("\x1bS%c[info] %s %i\r\n\x1b""E", wifi_connections[i].cid, msg, uptime);
-                    }
-                }
-#endif
-            }
-        }
+	 STM_EVAL_LEDOff(LED3);
+         delay_ms(200);
+	 STM_EVAL_LEDOff(LED4);
+         delay_ms(200);
+	 STM_EVAL_LEDOn(LED3);
+         delay_ms(200);
+	 STM_EVAL_LEDOn(LED4);
+         delay_ms(200);
     }
 }
 
