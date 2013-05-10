@@ -293,3 +293,4 @@ This demo is based on below original source code.
 * https://github.com/mblythe86/stm32f3-discovery-basic-template
 * http://strawberry-linux.com/pub/mini-demo.zip
 * https://github.com/openspaceaarhus/PhotonSaw
+* https://github.com/christianjann/microcli-stm32f0-discovery
