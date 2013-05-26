@@ -77,7 +77,7 @@ hs_main.c: hs_src/Main.hs
 
 proj: 	$(PROJ_NAME).elf
 
-$(PROJ_NAME).elf: $(SRCS)
+$(PROJ_NAME).elf: $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ -L$(STD_PERIPH_LIB) -lstm32f3 -L$(JHCRTS_LIB) -ljhcrts -L$(LDSCRIPT_INC) -Tstm32f3.ld
 	$(OBJCOPY) -O ihex $(PROJ_NAME).elf $(PROJ_NAME).hex
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).bin
