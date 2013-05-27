@@ -146,7 +146,7 @@ struct fl {
 #ifdef _JHC_MALLOC_HEAP_SIZE
 #define MALLOC_HEAPSIZE _JHC_MALLOC_HEAP_SIZE
 #else
-#define MALLOC_HEAPSIZE (1<<13)
+#define MALLOC_HEAPSIZE (10*1024)
 #endif /* _JHC_MALLOC_HEAP_SIZE */
 char malloc_heapstart[MALLOC_HEAPSIZE];
 char *malloc_heaplimit = (char *) (malloc_heapstart + MALLOC_HEAPSIZE);
