@@ -67,7 +67,7 @@ CFLAGS                  += -fno-asynchronous-unwind-tables -fno-unwind-tables
 CFLAGS                  += -I$(FW) -I$(FW)/drivers -I$(FW)/$(BOARD)
 CFLAGS                  += -Ijhc_rts -I. -DNDEBUG -D_JHC_GC=_JHC_GC_JGC -D_JHC_STANDALONE=0
 CFLAGS                  += -D_JHC_ARM_STAY_IN_THUMB_MODE -D_JHC_JGC_NAIVEGC
-CFLAGS                  += -D_JHC_JGC_STACKGROW=128 -D_JHC_JGC_FIXED_MEGABLOCK
+CFLAGS                  += -D_JHC_JGC_STACKGROW=128 -D_JHC_JGC_LIMITED_NUM_MEGABLOCK=1
 CFLAGS                  += -D_JHC_JGC_BLOCK_SHIFT=9 -D_JHC_JGC_MEGABLOCK_SHIFT=14
 CFLAGS                  += -D_JHC_JGC_GC_STACK_SHIFT=8 -D_JHC_JGC_LIMITED_NUM_GC_STACK=1
 CFLAGS                  += -D_LITTLE_ENDIAN
