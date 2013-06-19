@@ -22,7 +22,7 @@ CSRC += $(wildcard $(FW)/*.c)
 CSRC += $(wildcard *.c)
 CSRC += $(wildcard */*.c)
 CSRC += jhc_rts/rts/gc_jgc.c jhc_rts/rts/jhc_rts.c jhc_rts/rts/stableptr.c
-CSRC += jhc_rts/rts/rts_support.c hs_main.c
+CSRC += jhc_rts/rts/rts_support.c jhc_rts/rts/conc.c hs_main.c
 
 
 CPSRC  = $(wildcard $(FW)/drivers/*.cpp)

@@ -3,7 +3,7 @@ JHCRTS_SRC = src
 vpath %.c $(JHCRTS_SRC)/rts
 
 TARGET = libjhcrts.a
-SRC = gc_jgc.c jhc_rts.c stableptr.c rts_support.c profile.c
+SRC = gc_jgc.c jhc_rts.c stableptr.c rts_support.c profile.c conc.c
 OBJ = $(SRC:.c=.o)
 CFLAGS += -I$(JHCRTS_SRC)
 CFLAGS += -g -std=gnu99

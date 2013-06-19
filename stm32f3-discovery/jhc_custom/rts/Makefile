@@ -21,7 +21,7 @@ CFLAGS += -D_JHC_JGC_BLOCK_SHIFT=9 -D_JHC_JGC_MEGABLOCK_SHIFT=14
 CFLAGS += -D_JHC_JGC_GC_STACK_SHIFT=8 -D_JHC_JGC_LIMITED_NUM_GC_STACK=1
 CFLAGS += -D_JHC_JGC_NAIVEGC
 
-SRCS = gc_jgc.c jhc_rts.c stableptr.c rts_support.c
+SRCS = gc_jgc.c jhc_rts.c stableptr.c rts_support.c conc.c
 
 OBJS = $(SRCS:.c=.o)
 
