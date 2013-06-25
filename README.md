@@ -1,7 +1,7 @@
 # Ajhc demo for Cortex-M3 board
 
 First, you have to know there are several boards supported by the demo.
-Second, the demo needs Ajhc 0.8.0.6 or later.
+Second, the demo needs Ajhc 0.8.0.7 or later.
 
 Using stm32f3-discovery is strongly recommend, so you can use gdb.
 
