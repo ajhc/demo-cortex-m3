@@ -116,6 +116,7 @@
  */
 
 #include <stdlib.h>
+#include "rts/conc.h"
 
 /*
  * Each block actually has ALIGN(unsigned int) + ALIGN(size) bytes allocated
@@ -159,9 +160,12 @@ static char *top = (char *)HEAP_START;
 #define ALIGNBYTES	(sizeof(int) - 1)
 #define	ALIGN(p)	(((uintptr_t)(p) + ALIGNBYTES) & ~ALIGNBYTES)
 
+static jhc_mutex_t mutex = 0;
+
 void *
 malloc(size_t size)
 {
+	jhc_mutex_lock(&mutex);
 	struct fl **f = &freelist, **bestf = NULL;
 #ifndef ALLOC_FIRST_FIT
 	unsigned int bestsize = 0xffffffff;	/* greater than any real size */
@@ -217,6 +221,7 @@ malloc(size_t size)
 #ifdef ALLOC_TRACE
 		printf("=%lx\n", (u_long)help + ALIGN(sizeof(unsigned int)));
 #endif
+		jhc_mutex_unlock(&mutex);
 		return help + ALIGN(sizeof(unsigned int));
 	}
 
@@ -233,12 +238,14 @@ found:
 	printf("=%lx (origsize %u)\n",
 	    (u_long)help + ALIGN(sizeof(unsigned int)), *(unsigned int *)help);
 #endif
+	jhc_mutex_unlock(&mutex);
 	return help + ALIGN(sizeof(unsigned int));
 }
 
 void
 free(void *ptr)
 {
+	jhc_mutex_lock(&mutex);
 	struct fl *f =
 	    (struct fl *)(void *)((char *)(void *)ptr -
 	    ALIGN(sizeof(unsigned int)));
@@ -262,6 +269,7 @@ free(void *ptr)
 	/* put into freelist */
 	f->next = freelist;
 	freelist = f;
+	jhc_mutex_unlock(&mutex);
 }
 
 void *
