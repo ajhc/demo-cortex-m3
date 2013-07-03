@@ -101,7 +101,7 @@ program: $(PROJ_NAME).bin
 
 clean:
 	find ./ -name '*~' | xargs rm -f	
-	rm -f *.o hs_main.c
+	rm -f *.o hs_main.c *.symlist
 	rm -f $(PROJ_NAME).elf
 	rm -f $(PROJ_NAME).hex
 	rm -f $(PROJ_NAME).bin
@@ -109,3 +109,9 @@ clean:
 	rm -f $(PROJ_NAME).lst
 	$(MAKE) -C $(STD_PERIPH_LIB) clean
 	$(MAKE) -C $(JHCRTS_LIB) clean
+
+nohs.symlist: all
+	rm -f all.symlist hs.symlist
+	nm $(PROJ_NAME).elf | grep -v ' $$d' | grep -v ' $$t' | grep -v 'o:$$' | grep "^[0-9a-zA-Z]" > all.symlist
+	nm alloc.o dummy4jhc.o hs_main.o jhc_custom/rts/libjhcrts.a | grep -v ' $$d' | grep -v ' $$t' | grep -v 'o:$$' | grep "^[0-9a-zA-Z]" > hs.symlist
+	runghc symlist_noths.hs all.symlist hs.symlist > $@
