@@ -7,7 +7,8 @@ import Foreign.Storable
 import Data.Map (Map)
 import qualified Data.Map as Map
 
-foreign import ccall "c_extern.h Delay" c_delay :: Word32 -> IO ()
+import Intr
+
 foreign import ccall "c_extern.h &jhc_zeroAddress" c_jhc_zeroAddress16 :: Ptr Word16
 
 --------
@@ -111,7 +112,7 @@ main = do mapM_ ledOff [led3, led4, led5, led6, led7, led8, led9, led10]
           forever $ sequence_ dos
   where
     rawString = "HELLO WORLD"
-    delays = repeat $ c_delay 20
+    delays = repeat $ delay 20
     sigs = morseEncodeIO rawString
     clocks = cycle [clockOn, clockOff]
     dos = concat $ zipWith3 (\a b c -> [a,b,c]) sigs clocks delays

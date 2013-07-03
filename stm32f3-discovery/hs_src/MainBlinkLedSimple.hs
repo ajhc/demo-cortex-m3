@@ -3,7 +3,8 @@ import Control.Monad
 import Foreign.Ptr
 import Foreign.Storable
 
-foreign import ccall "c_extern.h Delay" c_delay :: Word32 -> IO ()
+import Intr
+
 foreign import ccall "c_extern.h &jhc_zeroAddress" c_jhc_zeroAddress16 :: Ptr Word16
 
 gpioPin9, led3 :: Word16
@@ -21,6 +22,6 @@ ledOn  = poke bsrrPtr
 main :: IO ()
 main = forever $ do
   ledOn led3
-  c_delay 10
+  delay 10
   ledOff led3
-  c_delay 10
+  delay 10

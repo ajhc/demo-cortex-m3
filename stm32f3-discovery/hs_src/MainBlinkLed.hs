@@ -4,7 +4,8 @@ import Control.Monad
 import Foreign.Ptr
 import Foreign.Storable
 
-foreign import ccall "c_extern.h Delay" c_delay :: Word32 -> IO ()
+import Intr
+
 foreign import ccall "c_extern.h &jhc_zeroAddress" c_jhc_zeroAddress16 :: Ptr Word16
 
 gpioPin8, gpioPin9, gpioPin10, gpioPin11, gpioPin12, gpioPin13, gpioPin14, gpioPin15, led3, led4, led5, led6, led7, led8, led9, led10 :: Word16
@@ -37,7 +38,7 @@ main :: IO ()
 main = forever $ sequence_ dos
        -- forever $! sequence_ dos -- will crash
   where
-    delays = repeat $ c_delay 4
+    delays = repeat $ delay 4
     leds = [led3, led4, led5, led6, led7, led8, led9, led10]
     ledsOnOff = fmap ledOn leds ++ fmap ledOff leds
     dos = concat $ zipWith (\a b -> [a,b]) ledsOnOff delays
