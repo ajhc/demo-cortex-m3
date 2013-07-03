@@ -1,2 +1,2 @@
+uint32_t *getTimingDelay(void);
 extern volatile void jhc_zeroAddress;
-void Delay(__IO uint32_t nTime);

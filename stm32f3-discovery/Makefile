@@ -73,7 +73,7 @@ jhcrts: hs_main.c
 	$(MAKE) -C $(JHCRTS_LIB)
 
 hs_main.c: hs_src/Main.hs
-	ajhc -fffi -p containers --tdir=$(JHCRTS_SRC) -C -o $@ $<
+	ajhc -fffi -p containers --tdir=$(JHCRTS_SRC) -C --include=hs_src -o $@ $<
 
 proj: 	$(PROJ_NAME).elf
 

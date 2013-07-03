@@ -1,14 +1,19 @@
 #include "stm32f30x.h"
 #include "stm32f3_discovery.h"
 #include "jhc_rts_header.h"
+#include "c_extern.h"
 
 /* Private variables ---------------------------------------------------------*/
   RCC_ClocksTypeDef RCC_Clocks;
 __IO uint32_t TimingDelay = 0;
 
+uint32_t *getTimingDelay()
+{
+  return &TimingDelay;
+}
+
 /* Private function prototypes -----------------------------------------------*/
-void TimingDelay_Decrement(void);
-void Delay(__IO uint32_t nTime);
+extern void timingDelayDecrement(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -19,7 +24,7 @@ void Delay(__IO uint32_t nTime);
   */
 void SysTick_Handler(void)
 {
-  TimingDelay_Decrement();
+  timingDelayDecrement(); // Call Haskell code.
 }
 
 #if 1 /* Catch intr. */
@@ -162,7 +167,6 @@ int main(void)
   STM_EVAL_LEDInit(LED9);
   STM_EVAL_LEDInit(LED10);
 
-#if 1
   { /* Run Haskell code */
 	  int hsargc = 1;
 	  char *hsargv = "q";
@@ -172,64 +176,9 @@ int main(void)
 	  _amain();
 	  /* hs_exit(); */
   }
-#endif
-
-#if 0
-  /* Infinite loop */
-  while (1)
-  {   
-    /* LEDs Off */
-    STM_EVAL_LEDOff(LED3);
-    STM_EVAL_LEDOff(LED6);
-    STM_EVAL_LEDOff(LED7);
-    STM_EVAL_LEDOff(LED4);
-    STM_EVAL_LEDOff(LED10);
-    STM_EVAL_LEDOff(LED8);
-    STM_EVAL_LEDOff(LED9);
-    STM_EVAL_LEDOff(LED5);
-    
-    Delay(50); /*500ms - half second*/
-    
-    /* LEDs On */
-    STM_EVAL_LEDOn(LED3);
-    STM_EVAL_LEDOn(LED6);
-    STM_EVAL_LEDOn(LED7);
-    STM_EVAL_LEDOn(LED4);
-    STM_EVAL_LEDOn(LED10);
-    STM_EVAL_LEDOn(LED8);
-    STM_EVAL_LEDOn(LED9);
-    STM_EVAL_LEDOn(LED5);
-    
-    Delay(50); /*500ms - half second*/
-  }
-#endif
 
   for (;;);
   /* NOTREACHED */
-}
-/**
-  * @brief  Inserts a delay time.
-  * @param  nTime: specifies the delay time length, in 10 ms.
-  * @retval None
-  */
-void Delay(__IO uint32_t nTime)
-{
-  TimingDelay = nTime;
-
-  while(TimingDelay != 0);
-}
-
-/**
-  * @brief  Decrements the TimingDelay variable.
-  * @param  None
-  * @retval None
-  */
-void TimingDelay_Decrement(void)
-{
-  if (TimingDelay != 0x00)
-  { 
-    TimingDelay--;
-  }
 }
 
 #ifdef  USE_FULL_ASSERT
