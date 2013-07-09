@@ -103,7 +103,7 @@ In another terminal, connect to the debugger and flash program.
 
 LPC-Link is not used with Linux Host.
 A debug board is needed for writing firmware to LPCXpresso Board.
-You can get more infomation from blew links.
+You can get more infomation from the following links.
 
 * [Prototype to hardware | mbed](http://mbed.org/users/chris/notebook/prototype-to-hardware/)
 * [LPCXpresso LPC1768登場 - Lynx-EyEDの電音鍵盤 新館](http://lynxeyed.hatenablog.com/entry/20100810/1281423414)
