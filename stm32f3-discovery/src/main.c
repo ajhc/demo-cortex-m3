@@ -12,6 +12,13 @@ uint32_t *getTimingDelay()
   return &TimingDelay;
 }
 
+__IO uint32_t IntrCount = 0;
+
+uint32_t *getIntrCount()
+{
+  return &IntrCount;
+}
+
 /* Private function prototypes -----------------------------------------------*/
 extern void timingDelayDecrement(void);
 
