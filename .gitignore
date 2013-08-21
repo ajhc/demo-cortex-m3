@@ -17,3 +17,12 @@ stbee-mini/mini-demo.hex
 stbee-mini/mini-demo.lss
 stbee-mini/mini-demo.sym
 rts-test/rts-test
+mbed-nxp-lpc1768/samples/*/*.bin
+mbed-nxp-lpc1768/samples/*/*.elf
+mbed-nxp-lpc1768/samples/*/*.hex
+mbed-nxp-lpc1768/samples/*/LPC176x/
+mbed-nxp-lpc1768/samples/*/build_haskell/
+mbed-nxp-lpc1768/*.log
+mbed-nxp-lpc1768/gcc-arm-none-eabi/
+mbed-nxp-lpc1768/BuildShell
+mbed-nxp-lpc1768/BuildShellDebug

@@ -50,6 +50,8 @@ Using following boards are strongly recommend, so you can use gdb.
 
 ### Install summon-arm-toolchain
 
+No needed for mbed NXP LPC1768. The mbed uses own toolchain.
+
     $ git clone git://github.com/esden/summon-arm-toolchain.git
     $ apt-get install flex bison libgmp3-dev libmpfr-dev libncurses5-dev \
       libmpc-dev autoconf texinfo build-essential libftdi-dev zlib1g-dev \
@@ -108,7 +110,54 @@ In another terminal, connect to the debugger and flash program.
     Transfer rate: 6 KB/sec, 2786 bytes/write.
     (gdb) c
 
+## If you use mbed NXP LPC1768
+
+### Upgrade firmware
+
+http://mbed.org/handbook/Firmware-LPC1768-LPC11U24
+
+Use rev 141212 or later firmware, to support CMSIS-DAP.
+
+### Install pyOCD
+
+http://mbed.org/blog/entry/Debugging-from-GDB-using-pyOCD/
+
+    $ sudo apt-get install python libusb-1.0-0-dev
+    $ git clone git@github.com:walac/pyusb.git
+    $ cd pyusb
+    $ sudo python setup.py install
+    $ git clone git@github.com:mbedmicro/mbed.git
+    $ cd mbed/workspace_tools/debugger
+    $ sudo python setup.py install
+
+### Setup toolchain
+
+    $ git clone git://github.com/ajhc/demo-cortex-m3.git
+    $ cd demo-cortex-m3/mbed-nxp-lpc1768
+    $ ./linux_install
+    Finished successfully
+    Press any key to continue...
+
+### How to build
+
+    $ cd demo-cortex-m3/mbed-nxp-lpc1768
+    $ ./BuildShell
+    $ cd samples/Haskell
+    $ make
+
+### Write to flash
+
+In one terminal, start the connection to the board.
+
+    $ cd demo-cortex-m3/mbed-nxp-lpc1768
+    $ sudo python gdbserver4mbed.py
+
 ## If you use LPCXpresso Board for LPC1769
+
+    $ cd demo-cortex-m3/mbed-nxp-lpc1768
+    $ ./BuildShell
+    $ cd samples/Haskell
+    $ make gdbwrite
 
 ### Get debug board
 
@@ -307,3 +356,4 @@ This demo is based on below original source code.
 * http://strawberry-linux.com/pub/mini-demo.zip
 * https://github.com/openspaceaarhus/PhotonSaw
 * https://github.com/christianjann/microcli-stm32f0-discovery
+* https://github.com/adamgreen/gcc4mbed
