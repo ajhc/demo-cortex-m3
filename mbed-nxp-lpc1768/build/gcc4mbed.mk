@@ -100,6 +100,7 @@ SRC ?= .
 GCC4MBED_TYPE ?= Release
 MRI_BREAK_ON_INIT ?= 1
 MRI_UART ?= MRI_UART_MBED_USB
+HS_ENABLE ?= 0
 
 
 # Configure MRI variables based on GCC4MBED_TYPE build type variable.
@@ -212,16 +213,17 @@ endif
 ifneq "$(NO_FLOAT_PRINTF)" "1"
 LDFLAGS += -u _printf_float
 endif
-
+LDFLAGS += -Wl,--defsym,jhc_zeroAddress=0
 
 #  Compiler/Assembler/Linker Paths
 GCC = arm-none-eabi-gcc
 GPP = arm-none-eabi-g++
 AS = arm-none-eabi-as
-LD = arm-none-eabi-g++
+LD = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 OBJDUMP = arm-none-eabi-objdump
 SIZE = arm-none-eabi-size
+GDB = arm-none-eabi-gdb
 
 # Some tools are different on Windows in comparison to Unix.
 ifeq "$(OS)" "Windows_NT"
@@ -262,11 +264,11 @@ $(PROJECT).bin: $(PROJECT).elf
 $(PROJECT).hex: $(PROJECT).elf
 	@echo Extracting $@
 	$(Q) $(OBJCOPY) -R .stack -O ihex $(PROJECT).elf $(PROJECT).hex
-	
+
 $(OUTDIR)/$(PROJECT).disasm: $(PROJECT).elf
 	@echo Extracting disassembly to $@
 	$(Q) $(OBJDUMP) -d -f -M reg-names-std $(PROJECT).elf >$(OUTDIR)/$(PROJECT).disasm
-	
+
 $(PROJECT).elf: $(LSCRIPT) $(OBJECTS)
 	@echo Linking $@
 	$(Q) $(LD) $(LDFLAGS) $(OBJECTS) $(LIBS) -o $(PROJECT).elf
@@ -325,3 +327,15 @@ $(OUTDIR)/%.o : %.s
 	$(Q) $(AS) $(AS_FLAGS) -o $@ $<
 
 #########################################################################
+
+gdbwrite: all
+	@echo '############################################################'
+	@echo '##### Use me after running "sudo ./gdbserver4mbed.py". #####'
+	@echo '############################################################'
+	$(GDB) -x ../../gdbwrite.boot $(PROJECT).elf
+
+gdbattach: all
+	@echo '############################################################'
+	@echo '##### Use me after running "sudo ./gdbserver4mbed.py". #####'
+	@echo '############################################################'
+	$(GDB) -x ../../gdbattach.boot $(PROJECT).elf
