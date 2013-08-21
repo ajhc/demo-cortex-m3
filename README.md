@@ -3,7 +3,10 @@
 First, you have to know there are several boards supported by the demo.
 Second, the demo needs Ajhc 0.8.0.7 or later.
 
-Using stm32f3-discovery is strongly recommend, so you can use gdb.
+Using following boards are strongly recommend, so you can use gdb.
+
+* stm32f3-discovery
+* mbed NXP LPC1768
 
 ## Demo movies
 
@@ -18,6 +21,14 @@ Using stm32f3-discovery is strongly recommend, so you can use gdb.
 * CPU: STM32F303VCT6
 * ROM: 256kB
 * RAM: 48kB
+
+## [mbed NXP LPC1768](https://mbed.org/handbook/mbed-NXP-LPC1768)
+
+![](https://raw.github.com/ajhc/demo-cortex-m3/master/img/mbed-nxp-lpc1768.jpg)
+
+* CPU: LPC1768
+* ROM: 512kB
+* RAM: 32kB
 
 ## [LPCXpresso Board for LPC1769](http://www.nxp.com/demoboard/OM13000.html)
 
