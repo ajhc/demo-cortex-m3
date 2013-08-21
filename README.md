@@ -152,6 +152,14 @@ In one terminal, start the connection to the board.
     $ cd demo-cortex-m3/mbed-nxp-lpc1768
     $ sudo python gdbserver4mbed.py
 
+In another terminal, connect to the debugger and flash program.
+
+    $ cd demo-cortex-m3/mbed-nxp-lpc1768
+    $ ./BuildShell
+    $ cd samples/Haskell
+    $ make gdbwrite
+    (gdb) c
+
 ## If you use LPCXpresso Board for LPC1769
 
     $ cd demo-cortex-m3/mbed-nxp-lpc1768
