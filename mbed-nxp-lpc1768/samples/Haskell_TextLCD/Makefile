@@ -9,7 +9,7 @@ all: $(HSBUILD)/hs_main.c
 
 $(HSBUILD)/hs_main.c: $(HSSRC)
 	mkdir -p $(HSBUILD)
-	ajhc -fffi -p containers --tdir=$(HSBUILD) -C --include=hs_src -o $@ $<
+	ajhc -fffi -p containers --tdir=$(HSBUILD) -C --include=hs_src -o $@ hs_src/Main.hs
 	rm -f $(HSBUILD)/rts/gc_none.c $(HSBUILD)/rts/profile.c $(HSBUILD)/rts/slub.c
 
 clean:

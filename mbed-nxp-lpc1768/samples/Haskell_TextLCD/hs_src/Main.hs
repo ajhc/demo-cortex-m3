@@ -1,32 +1,17 @@
 import Control.Monad
-import Data.Word
 
 import Led
+import Gpio
 import Delay
 
 main :: IO ()
 main = do
-  initLeds
-  realmain
+  gt1 <- initLed led1
+  realmain gt1
 
-ledList :: [Word32]
-ledList = [led1, led2, led3, led4]
-
-realmain :: IO ()
-realmain = forever $ do
-  ledsOn $ take 1 ledList
-  delayUs 1000000
-  ledsOn $ take 2 ledList
-  delayUs 1000000
-  ledsOn $ take 3 ledList
-  delayUs 1000000
-  ledsOn $ take 4 ledList
-  delayUs 1000000
-  ledsOn $ drop 1 ledList
-  delayUs 1000000
-  ledsOn $ drop 2 ledList
-  delayUs 1000000
-  ledsOn $ drop 3 ledList
-  delayUs 1000000
-  ledsOn $ drop 4 ledList
-  delayUs 1000000
+realmain :: GpioTag -> IO ()
+realmain gt1 = forever $ do
+  ledCtrl gt1 LedOn
+  delayUs 100000
+  ledCtrl gt1 LedOff
+  delayUs 100000
