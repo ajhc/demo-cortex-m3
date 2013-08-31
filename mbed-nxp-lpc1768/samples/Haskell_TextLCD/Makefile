@@ -1,20 +1,18 @@
-TRGT  = arm-none-eabi-
-GDB   = $(TRGT)gdb
-HSDIR = hs_src
 HSBUILD = build_haskell
-HSSRC = $(wildcard $(HSDIR)/*.hs $(HSDIR)/*/*.hs $(HSDIR)/*/*/*.hs $(HSDIR)/*/*/*/*.hs $(HSDIR)/*/*/*/*/*.hs)
+TINI = $(HSBUILD)/targets.ini
 
-all: $(HSBUILD)/hs_main.c
+all:: $(HSBUILD)/hs_main.c
 	make -f forc.mk
+
+include forc.mk
 
 $(HSBUILD)/hs_main.c: $(HSSRC)
 	mkdir -p $(HSBUILD)
-	ajhc -fffi -p containers --tdir=$(HSBUILD) -C --include=hs_src -o $@ hs_src/Main.hs
+	echo "[mbed]"               > $(TINI)
+	echo "cc=arm-none-eabi-gcc" >> $(TINI)
+	echo "byteorder=le"         >> $(TINI)
+	echo "cflags=$(GCFLAGS)"    >> $(TINI)
+	echo "cflags_debug="        >> $(TINI)
+	echo "cflags_nodebug="      >> $(TINI)
+	ajhc --targetsini=$(TINI) --cross -mmbed -fffi --tdir=$(HSBUILD) -C --include=hs_src -o $@ $(HSMAIN)
 	rm -f $(HSBUILD)/rts/gc_none.c $(HSBUILD)/rts/profile.c $(HSBUILD)/rts/slub.c
-
-clean:
-	rm -rf build_haskell
-	make -f forc.mk clean
-
-gdbwrite gdbattach: all
-	make -f forc.mk $@

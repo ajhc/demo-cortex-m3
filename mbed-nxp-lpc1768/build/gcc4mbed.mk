@@ -101,6 +101,10 @@ GCC4MBED_TYPE ?= Release
 MRI_BREAK_ON_INIT ?= 1
 MRI_UART ?= MRI_UART_MBED_USB
 CPLUSPLUS_ENABLE ?= 1
+HSDIR ?= hs_src
+HSBUILD ?= build_haskell
+HSSRC ?= $(wildcard $(HSDIR)/*.hs $(HSDIR)/*/*.hs $(HSDIR)/*/*/*.hs $(HSDIR)/*/*/*/*.hs $(HSDIR)/*/*/*/*/*.hs)
+HSMAIN ?= $(HSDIR)/Main.hs
 
 # Configure MRI variables based on GCC4MBED_TYPE build type variable.
 ifeq "$(GCC4MBED_TYPE)" "Release"
@@ -284,7 +288,7 @@ clean:
 	@echo Cleaning up all build generated files
 	$(Q) $(REMOVE) -f $(call convert-slash,$(OBJECTS)) $(QUIET)
 	$(Q) $(REMOVE) -f $(call convert-slash,$(DEPFILES)) $(QUIET)
-	$(Q) $(REMOVE_DIR) $(OUTDIR) $(QUIET)
+	$(Q) $(REMOVE_DIR) $(OUTDIR) $(HSBUILD) $(QUIET)
 	$(Q) $(REMOVE) -f $(call convert-slash,$(OUTDIR)/$(PROJECT).map) $(QUIET)
 	$(Q) $(REMOVE) -f $(call convert-slash,$(OUTDIR)/$(PROJECT).disasm) $(QUIET)
 	$(Q) $(REMOVE) -f $(PROJECT).bin $(QUIET)
