@@ -17,15 +17,6 @@
 #include "jhc_rts_header.h"
 #include "c_extern.h"
 
-volatile int g_LoopDummy;
-
-void delay(int times)
-{
-	int i;
-
-	for (i = 0 ; i < times && !g_LoopDummy ; i++) {}
-}
-
 int main() 
 {
 	/* Call Haskell code */

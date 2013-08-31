@@ -1,4 +1,4 @@
 module Delay where
 import Foreign.C.Types
 
-foreign import ccall "c_extern.h delay" delay :: CInt -> IO ()
+foreign import ccall "c_extern.h wait_us" delayUs :: CInt -> IO ()
