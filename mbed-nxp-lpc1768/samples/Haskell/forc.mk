@@ -18,6 +18,7 @@ LIBS_SUFFIX=
 NO_FLOAT_SCANF=1
 NO_FLOAT_PRINTF=1
 VERBOSE=1
+CPLUSPLUS_ENABLE=0
 
 HS_ENABLE = 1
 GCFLAGS += -std=gnu99 -ffreestanding -nostdlib -falign-functions=4

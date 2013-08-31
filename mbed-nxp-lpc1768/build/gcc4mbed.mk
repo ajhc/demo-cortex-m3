@@ -100,8 +100,7 @@ SRC ?= .
 GCC4MBED_TYPE ?= Release
 MRI_BREAK_ON_INIT ?= 1
 MRI_UART ?= MRI_UART_MBED_USB
-HS_ENABLE ?= 0
-
+CPLUSPLUS_ENABLE ?= 1
 
 # Configure MRI variables based on GCC4MBED_TYPE build type variable.
 ifeq "$(GCC4MBED_TYPE)" "Release"
@@ -165,7 +164,11 @@ DEFINES += -DMRI_BREAK_ON_INIT=$(MRI_BREAK_ON_INIT) -DMRI_SEMIHOST_STDIO=$(MRI_S
 
 # Libraries to be linked into final binary
 MBED_LIBS = $(EXTERNAL_DIR)/mbed/LPC1768/GCC_ARM/libmbed.a
+ifeq "$(CPLUSPLUS_ENABLE)" "1"
 SYS_LIBS = -lstdc++_s -lsupc++_s -lm -lgcc -lc_s -lgcc -lc_s -lnosys
+else
+SYS_LIBS = -lm -lgcc -lnosys
+endif
 LIBS = $(LIBS_PREFIX) 
 
 ifeq "$(MRI_ENABLE)" "1"
