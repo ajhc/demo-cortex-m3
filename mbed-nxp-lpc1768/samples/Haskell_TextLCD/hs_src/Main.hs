@@ -1,19 +1,14 @@
 import Control.Monad
-import Data.Word
 
 import Led
 import Delay
 
 main :: IO ()
 main = do
-  initLeds
-  realmain
+  ledList <- mapM initLed [led1, led2, led3, led4]
+  realmain ledList
 
-ledList :: [Word32]
-ledList = [led1, led2, led3, led4]
-
-realmain :: IO ()
-realmain = forever $ do
+realmain ledList = forever $ do
   ledsOn $ take 1 ledList
   delayUs 100000
   ledsOn $ take 2 ledList
@@ -22,11 +17,11 @@ realmain = forever $ do
   delayUs 100000
   ledsOn $ take 4 ledList
   delayUs 100000
-  ledsOn $ drop 1 ledList
+  ledsOff $ take 1 ledList
   delayUs 100000
-  ledsOn $ drop 2 ledList
+  ledsOff $ take 2 ledList
   delayUs 100000
-  ledsOn $ drop 3 ledList
+  ledsOff $ take 3 ledList
   delayUs 100000
-  ledsOn $ drop 4 ledList
+  ledsOff $ take 4 ledList
   delayUs 100000
