@@ -5,15 +5,15 @@ import Foreign.Ptr
 import Gpio
 
 -- LED1 = P1.18  LED2 = P1.20  LED3 = P1.21  LED4 = P1.23
-led1, led2, led3, led4 :: CInt
+led1, led2, led3, led4 :: Int
 led1 = pinName 1 18
 led2 = pinName 1 20
 led3 = pinName 1 21
 led4 = pinName 1 23
-ledAll :: [CInt]
+ledAll :: [Int]
 ledAll = [led1, led2, led3, led4]
 
-initLed :: CInt -> IO (Ptr GpioT)
+initLed :: Int -> IO (Ptr GpioT)
 initLed name = gpioInit name pinOutput
 
 ledOn, ledOff :: Ptr GpioT -> IO ()
