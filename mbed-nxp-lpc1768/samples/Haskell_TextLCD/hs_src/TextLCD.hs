@@ -88,8 +88,9 @@ putc lcd@(LCDState { lcdGpioRs  = gRs
                      let c' = c + 1
                      modifyIORef col $ const c'
                      when (c' >= columns lcd) $ do modifyIORef col $ const 0
-                                                   modifyIORef row (1 +)
-                                                   when (r >= rows lcd) $ modifyIORef row $ const 0
+                                                   let r' = r + 1
+                                                   modifyIORef row $ const r'
+                                                   when (r' >= rows lcd) $ modifyIORef row $ const 0
 
 writeByte :: LCDState -> Int -> IO ()
 writeByte (LCDState { lcdGpioRs  = gRs

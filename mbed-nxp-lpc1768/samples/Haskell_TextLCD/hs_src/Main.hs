@@ -40,5 +40,4 @@ realmain ledList lcd = forever $ do
   LCD.putc lcd 'g'
   delayUs 100000
   ledsOff $ take 4 ledList
-  LCD.putc lcd 'h'
   delayUs 100000
