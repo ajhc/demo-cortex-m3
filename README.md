@@ -50,8 +50,6 @@ Using following boards are strongly recommend, so you can use gdb.
 
 ### Install summon-arm-toolchain
 
-No needed for mbed NXP LPC1768. The mbed uses own toolchain.
-
     $ git clone git://github.com/esden/summon-arm-toolchain.git
     $ apt-get install flex bison libgmp3-dev libmpfr-dev libncurses5-dev \
       libmpc-dev autoconf texinfo build-essential libftdi-dev zlib1g-dev \
@@ -130,18 +128,9 @@ http://mbed.org/blog/entry/Debugging-from-GDB-using-pyOCD/
     $ cd mbed/workspace_tools/debugger
     $ sudo python setup.py install
 
-### Setup toolchain
-
-    $ git clone git://github.com/ajhc/demo-cortex-m3.git
-    $ cd demo-cortex-m3/mbed-nxp-lpc1768
-    $ ./linux_install
-    Finished successfully
-    Press any key to continue...
-
 ### How to build
 
     $ cd demo-cortex-m3/mbed-nxp-lpc1768
-    $ ./BuildShell
     $ cd samples/Haskell
     $ make
 
