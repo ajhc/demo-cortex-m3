@@ -18,26 +18,9 @@ main = do
   realmain ledList lcd
 
 realmain ledList lcd = forever $ do
-  ledsOn $ take 1 ledList
-  LCD.putc lcd 'a'
-  delayUs 100000
-  ledsOn $ take 2 ledList
-  LCD.putc lcd 'b'
-  delayUs 100000
-  ledsOn $ take 3 ledList
-  LCD.putc lcd 'c'
-  delayUs 100000
-  ledsOn $ take 4 ledList
-  LCD.putc lcd 'd'
-  delayUs 100000
-  ledsOff $ take 1 ledList
-  LCD.putc lcd 'e'
-  delayUs 100000
-  ledsOff $ take 2 ledList
-  LCD.putc lcd 'f'
-  delayUs 100000
-  ledsOff $ take 3 ledList
-  LCD.putc lcd 'g'
-  delayUs 100000
-  ledsOff $ take 4 ledList
-  delayUs 100000
+  let ledOnActs  = fmap (ledsOn  . (flip take $ ledList)) [0..4]
+      ledOffActs = fmap (ledsOff . (flip take $ ledList)) [0..4]
+      ledActs    = ledOnActs ++ ledOffActs
+      lcdActs    = fmap (LCD.putc lcd) $ ['a'..'z'] ++ ['A'..'Z']
+      delayActs  = replicate 20 $ delayUs 100000
+  sequence_ $ zipWith3 (\a b c -> a >> b >> c) ledActs lcdActs delayActs
