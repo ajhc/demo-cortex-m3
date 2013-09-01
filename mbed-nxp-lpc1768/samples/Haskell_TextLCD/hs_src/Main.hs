@@ -5,6 +5,18 @@ import Delay
 import Gpio
 import qualified TextLCD as LCD
 
+
+space :: String
+space =  replicate 16 ' '
+
+logo :: [String]
+logo = replicate 2 space ++ [ "   _ _          "
+                            , "  (_) |__   ___ "
+                            , "  | | '_ \\ / __|"
+                            , "  | | | | | (__ "
+                            , " _/ |_| |_|\\___|"
+                            , "|__/            " ] ++ replicate 2 space
+
 main :: IO ()
 main = do
   ledList <- mapM initLed [led1, led2, led3, led4]
@@ -18,9 +30,10 @@ main = do
   realmain ledList lcd
 
 realmain ledList lcd = forever $ do
-  let ledOnActs  = fmap (ledsOn  . (flip take $ ledList)) [0..4]
-      ledOffActs = fmap (ledsOff . (flip take $ ledList)) [0..4]
+  let ledOnActs  = fmap (ledsOn  . (flip take $ ledList)) [1..4]
+      ledOffActs = fmap (ledsOff . (flip take $ ledList)) [1..4]
       ledActs    = ledOnActs ++ ledOffActs
-      lcdActs    = fmap (LCD.putc lcd) $ ['a'..'z'] ++ ['A'..'Z']
-      delayActs  = replicate 20 $ delayUs 100000
+      sliceLogo n = concat . take 2 . drop n $ logo
+      lcdActs    = fmap (LCD.putstr lcd . sliceLogo) [0..(length logo - 2)]
+      delayActs  = replicate 20 $ delayUs 150000
   sequence_ $ zipWith3 (\a b c -> a >> b >> c) ledActs lcdActs delayActs

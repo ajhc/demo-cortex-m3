@@ -92,6 +92,9 @@ putc lcd@(LCDState { lcdGpioRs  = gRs
                                                    modifyIORef row $ const r'
                                                    when (r' >= rows lcd) $ modifyIORef row $ const 0
 
+putstr :: LCDState -> String -> IO ()
+putstr lcd s = mapM_ (putc lcd) s
+
 writeByte :: LCDState -> Int -> IO ()
 writeByte (LCDState { lcdGpioRs  = gRs
                     , lcdGpioE   = gE
