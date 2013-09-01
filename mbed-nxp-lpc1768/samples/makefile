@@ -23,8 +23,9 @@ else
 Q=
 endif
 
-.PHONY: subdirs $(DIRS)
+.PHONY: all subdirs $(DIRS)
 
+all: subdirs
 subdirs: $(DIRS)
 
 clean: $(DIRS)
