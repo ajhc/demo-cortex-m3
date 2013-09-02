@@ -1,4 +1,4 @@
-# Ajhc demo for Cortex-M3/4 board
+# Ajhc demo for Cortex-M3/4 board [![Build Status](https://travis-ci.org/ajhc/demo-cortex-m3.png)](https://travis-ci.org/ajhc/demo-cortex-m3)
 
 First, you have to know there are several boards supported by the demo.
 Second, the demo needs Ajhc 0.8.0.7 or later.
