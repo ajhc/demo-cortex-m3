@@ -10,12 +10,16 @@ space :: String
 space =  replicate 16 ' '
 
 logo :: [String]
-logo = replicate 2 space ++ [ "   _ _          "
-                            , "  (_) |__   ___ "
-                            , "  | | '_ \\ / __|"
-                            , "  | | | | | (__ "
-                            , " _/ |_| |_|\\___|"
-                            , "|__/            " ] ++ replicate 2 space
+logo = [ space
+       , "  >>= jhc >>=   "
+       , "   _ _          "
+       , "  (_) |__   ___ "
+       , "  | | '_ \\ / __|"
+       , "  | | | | | (__ "
+       , " _/ |_| |_|\\___|"
+       , "|__/            "
+       , space
+       , space              ]
 
 main :: IO ()
 main = do
