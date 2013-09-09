@@ -980,7 +980,17 @@ err_t lpc_enetif_init(struct netif *netif)
     lpc_enetdata.netif = netif;
 
     /* set MAC hardware address */
-    mbed_mac_address((char *)netif->hwaddr);
+    // mbed_mac_address((char *)netif->hwaddr); // xxx
+    {
+        char *mac = (char *)netif->hwaddr;
+        mac[0] = 0x00;
+        mac[1] = 0x02;
+        mac[2] = 0xF7;
+        mac[3] = 0xF0;
+        mac[4] = 0x99;
+        mac[5] = 0x99;
+    }
+
     netif->hwaddr_len = ETHARP_HWADDR_LEN;
 
      /* maximum transfer unit */
