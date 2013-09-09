@@ -1,11 +1,16 @@
 #include "mbed.h"
+#include "TextLCD.h"
 #include "EthernetInterface.h"
 
+TextLCD lcd(p24, p26, p27, p28, p29, p30); // rs, e, d0-d3
+
 int main() {
+    lcd.printf("Start!\n");
+
     EthernetInterface eth;
     eth.init(); //Use DHCP
     eth.connect();
-    printf("IP Address is %s\n", eth.getIPAddress());
+    lcd.printf("IP:%s\n", eth.getIPAddress());
     
     TCPSocketConnection sock;
     sock.connect("mbed.org", 80);
@@ -20,11 +25,11 @@ int main() {
         if (ret <= 0)
             break;
         buffer[ret] = '\0';
-        printf("Received %d chars from server:\n%s\n", ret, buffer);
+        lcd.cls();
+        lcd.printf("Len:%d\n\"%s\"\n", ret, buffer);
     }
       
     sock.close();
-    
     eth.disconnect();
     
     while(1) {}
