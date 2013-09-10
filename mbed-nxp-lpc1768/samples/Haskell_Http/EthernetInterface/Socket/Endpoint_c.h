@@ -1,4 +1,3 @@
-/* EthernetInterface.h */
 /* Copyright (C) 2012 mbed.org, MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,27 +15,14 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
- 
-#ifndef ETHERNETINTERFACE_C_H_
-#define ETHERNETINTERFACE_C_H_
+#ifndef ENDPOINT_C_H
+#define ENDPOINT_C_H
 
-#if !defined(TARGET_LPC1768)
-#error The Ethernet Interface library is supported only on the mbed NXP LPC1768
+struct myEndpoint {
+	char _ipAddress[16];
+	struct sockaddr_in _remoteHost;
+};
+
+int endpoint_set_address(struct myEndpoint *ep, const char* host, const int port);
+
 #endif
-
-// #include "rtos.h"
-#include <stdint.h>
-#include "cmsis_os.h"
-
-#include "lwip/netif.h"
-
-#include "TCPSocketConnection_c.h"
-// #include "TCPSocketServer.h"
-
-#include "Endpoint_c.h"
-//#include "UDPSocket.h"
-
-int ethernet_interface_init_dhcp(void);
-int ethernet_interface_connect(unsigned int timeout_ms);
-
-#endif /* ETHERNETINTERFACE_C_H_ */

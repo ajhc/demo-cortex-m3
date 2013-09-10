@@ -1,4 +1,3 @@
-/* EthernetInterface.h */
 /* Copyright (C) 2012 mbed.org, MIT License
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -16,27 +15,30 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
- 
-#ifndef ETHERNETINTERFACE_C_H_
-#define ETHERNETINTERFACE_C_H_
+#ifndef SOCKET_C_H_
+#define SOCKET_C_H_
 
-#if !defined(TARGET_LPC1768)
-#error The Ethernet Interface library is supported only on the mbed NXP LPC1768
-#endif
+#include "lwip/sockets.h"
+#include "lwip/netdb.h"
 
-// #include "rtos.h"
-#include <stdint.h>
-#include "cmsis_os.h"
+struct mySocket {
+	int _sock_fd;
+	int _blocking;
+	struct timeval _timeout;
+};
 
-#include "lwip/netif.h"
+int socket_init_socket(struct mySocket *sock, int type);
+int socket_wait_readable(struct mySocket *sock, struct timeval *timeout);
+int socket_wait_writable(struct mySocket *sock, struct timeval *timeout);
+int socket_close(struct mySocket *sock);
 
-#include "TCPSocketConnection_c.h"
-// #include "TCPSocketServer.h"
+//DNS
+inline struct hostent *gethostbyname(const char *name) {
+  return lwip_gethostbyname(name);
+}
 
-#include "Endpoint_c.h"
-//#include "UDPSocket.h"
+inline int gethostbyname_r(const char *name, struct hostent *ret, char *buf, size_t buflen, struct hostent **result, int *h_errnop) {
+  return lwip_gethostbyname_r(name, ret, buf, buflen, result, h_errnop);
+}
 
-int ethernet_interface_init_dhcp(void);
-int ethernet_interface_connect(unsigned int timeout_ms);
-
-#endif /* ETHERNETINTERFACE_C_H_ */
+#endif /* SOCKET_C_H_ */

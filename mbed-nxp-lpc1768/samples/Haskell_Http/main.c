@@ -22,6 +22,20 @@ int main()
 	ethernet_interface_init_dhcp();
 	ethernet_interface_connect(12000);
 
+	struct myTCPSocketConnection sock;
+	tcp_socket_connection_connect(&sock, "mbed.org", 80);
+	char http_cmd[] = "GET /media/uploads/mbed_official/hello.txt HTTP/1.0\n\n";
+	tcp_socket_connection_send_all(&sock, http_cmd, sizeof(http_cmd)-1);
+
+	char buffer[300];
+	int ret;
+	while (true) {
+		ret = tcp_socket_connection_receive(&sock, buffer, sizeof(buffer)-1);
+		if (ret <= 0)
+			break;
+		buffer[ret] = '\0';
+	}
+
 	/* Call Haskell code */
 	int hsargc = 1;
 	char *hsargv = "q";
