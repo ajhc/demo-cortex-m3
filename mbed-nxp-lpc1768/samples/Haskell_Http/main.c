@@ -19,6 +19,7 @@
 
 int main() 
 {
+#if 0
 	ethernet_interface_init_dhcp();
 	ethernet_interface_connect(12000);
 
@@ -35,6 +36,7 @@ int main()
 			break;
 		buffer[ret] = '\0';
 	}
+#endif
 
 	/* Call Haskell code */
 	int hsargc = 1;

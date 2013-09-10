@@ -74,6 +74,9 @@ static void netif_status_callback(struct netif *netif) {
 }
 
 static void init_netif(ip_addr_t *ipaddr, ip_addr_t *netmask, ip_addr_t *gw) {
+	init_mySemaphore(&tcpip_inited, 0);
+	init_mySemaphore(&netif_inited, 0);
+
 	tcpip_init(tcpip_init_done, NULL);
 	wait_mySemaphore(&tcpip_inited, osWaitForever);
     

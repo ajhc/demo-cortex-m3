@@ -38,5 +38,7 @@
 
 int ethernet_interface_init_dhcp(void);
 int ethernet_interface_connect(unsigned int timeout_ms);
+int ethernet_interface_disconnect(void);
+char* ethernet_interface_getIPAddress(void);
 
 #endif /* ETHERNETINTERFACE_C_H_ */
