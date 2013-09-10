@@ -5,6 +5,7 @@ import Delay
 import Gpio
 import qualified TextLCD as LCD
 import EthernetInterface
+import TCPSocketConnection
 
 main :: IO ()
 main = do
@@ -16,11 +17,18 @@ main = do
       p29 = pinName 0 5
       p30 = pinName 0 4
   lcd <- LCD.initTextLCD p24 p26 (p27, p28, p29, p30) LCD.LCD16x2
+  -- DHCP
   LCD.putstr lcd "start. "
   ethernetInitDhcp >>= LCD.putstr lcd . show
   ethernetConnect 12000 >>= LCD.putstr lcd . show
   LCD.putstr lcd "\nIP"
   ethernetGetIpAddress >>= LCD.putstr lcd
+  -- TCP
+  tcp <- tcpSocketConnection_connect "mbed.org" 80
+  tcpSocketConnection_send_all tcp "GET /media/uploads/mbed_official/hello.txt HTTP/1.0\n\n"
+  tcpSocketConnection_receive tcp >>= LCD.putstr lcd
+  tcpSocketConnection_receive tcp >>= LCD.putstr lcd
+  tcpSocketConnection_receive tcp >>= LCD.putstr lcd
   realmain ledList lcd
 
 realmain ledList lcd = forever $ do
