@@ -19,7 +19,7 @@ showTitle io = go
 
 printTitle :: (Char -> IO ()) -> String -> IO ()
 printTitle io s = do
-  skip s >>= ioprint >>= ioprint >>= ioprint
+  skip s >>= ioprint >>= (\s' -> io '|' >> ioprint s')
   return ()
   where skip = showTitle (const $ return ()) . findTitleTag
         ioprint = showTitle io . findTitleTag

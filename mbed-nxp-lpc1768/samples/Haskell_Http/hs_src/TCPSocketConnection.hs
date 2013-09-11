@@ -10,6 +10,7 @@ newtype {-# CTYPE "struct myTCPSocketConnection" #-} TCPSocketConnectionT = TCPS
 foreign import ccall "c_extern.h tcp_socket_connection_connect" c_tcp_socket_connection_connect :: Ptr TCPSocketConnectionT -> CString -> Int -> IO Int
 foreign import ccall "c_extern.h tcp_socket_connection_send_all" c_tcp_socket_connection_send_all :: Ptr TCPSocketConnectionT -> CString -> Int -> IO Int
 foreign import ccall "c_extern.h tcp_socket_connection_receive" c_tcp_socket_connection_receive :: Ptr TCPSocketConnectionT -> CString -> Int -> IO Int
+foreign import ccall "c_extern.h tcp_socket_connection_close" c_tcp_socket_connection_close :: Ptr TCPSocketConnectionT -> IO Int
 
 tcpSocketConnection_connect :: String -> Int -> IO (Ptr TCPSocketConnectionT)
 tcpSocketConnection_connect host port = do
@@ -29,3 +30,9 @@ tcpSocketConnection_receive tag =
     r <- c_tcp_socket_connection_receive tag cs n
     if r <= 0 then return ""
       else peekCStringLen (cs, r)
+
+tcpSocketConnection_close :: Ptr TCPSocketConnectionT -> IO Int
+tcpSocketConnection_close tag = do
+  r <- c_tcp_socket_connection_close tag
+  free tag
+  return r

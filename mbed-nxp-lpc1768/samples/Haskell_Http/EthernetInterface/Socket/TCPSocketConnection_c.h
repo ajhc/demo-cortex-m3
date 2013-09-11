@@ -31,5 +31,6 @@ struct myTCPSocketConnection {
 int tcp_socket_connection_connect(struct myTCPSocketConnection *tcp, const char* host, const int port);
 int tcp_socket_connection_send_all(struct myTCPSocketConnection *tcp, char* data, int length);
 int tcp_socket_connection_receive(struct myTCPSocketConnection *tcp, char* data, int length);
+int tcp_socket_connection_close(struct myTCPSocketConnection *tcp);
 
 #endif

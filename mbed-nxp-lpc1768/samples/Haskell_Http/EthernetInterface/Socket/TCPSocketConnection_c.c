@@ -123,3 +123,7 @@ int tcp_socket_connection_receive_all(struct myTCPSocketConnection *tcp, char* d
 	}
 	return readLen;
 }
+
+int tcp_socket_connection_close(struct myTCPSocketConnection *tcp) {
+	return socket_close(&tcp->sock);
+}
