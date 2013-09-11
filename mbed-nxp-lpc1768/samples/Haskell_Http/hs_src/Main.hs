@@ -51,11 +51,25 @@ printRss lcd host (headline, url) = do
   tcpSocketConnection_send_all tcp $ "GET " ++ url ++ " HTTP/1.0\n\n"
   r <- receiveAll tcp
   LCD.cls lcd
-  LCD.putstr lcd $ ">>" ++ headline
+  LCD.putstr lcd $ ">> " ++ headline
   printTitle (slowPutstr lcd) r
   tcpSocketConnection_close tcp
   delayMs 1000
   return ()
+
+tryDhcp :: LCD.LCDState -> IO Bool
+tryDhcp lcd = do
+  LCD.cls lcd
+  LCD.putstr lcd "Start >>= "
+--  ethernetDisconnect
+  r1 <- ethernetInitDhcp
+  LCD.putstr lcd . show $ r1
+  r2 <- ethernetConnect 12000
+  LCD.putstr lcd . show $ r2
+  LCD.putstr lcd "\nIP"
+  ip <- ethernetGetIpAddress
+  LCD.putstr lcd ip
+  return $ r1 == 0 && r2 == 0
 
 main :: IO ()
 main = do
@@ -66,12 +80,7 @@ main = do
       p29 = pinName 0 5
       p30 = pinName 0 4
   lcd <- LCD.initTextLCD p24 p26 (p27, p28, p29, p30) LCD.LCD16x2
-  -- DHCP
-  LCD.putstr lcd "Start >>= "
-  ethernetInitDhcp >>= LCD.putstr lcd . show
-  ethernetConnect 12000 >>= LCD.putstr lcd . show
-  LCD.putstr lcd "\nIP"
-  ethernetGetIpAddress >>= LCD.putstr lcd
+  tryDhcp lcd
   delayMs 500
   -- TCP
   forever $ mapM_ (printRss lcd "www.reddit.com") [("Haskell", "http://www.reddit.com/r/haskell/.rss")

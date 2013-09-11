@@ -127,6 +127,7 @@ int ethernet_interface_disconnect() {
 
 	NVIC_DisableIRQ(ENET_IRQn);
 
+	connected = 0;
 	return 0;
 }
 
