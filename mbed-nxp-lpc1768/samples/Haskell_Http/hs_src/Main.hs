@@ -1,5 +1,6 @@
 import Control.Monad
 import System.IO.Unsafe
+import Foreign.Ptr
 
 import Delay
 import Gpio
@@ -8,12 +9,13 @@ import EthernetInterface
 import TCPSocketConnection
 import ParseRss
 
+receiveAll :: Ptr TCPSocketConnectionT -> IO [String]
 receiveAll tcp = unsafeInterleaveIO receiveAll' where
   receiveAll' = do
     s <- tcpSocketConnection_receive tcp
     if s == "" then return [] else do
       s' <- unsafeInterleaveIO receiveAll'
-      return $ s ++ s'
+      return $ s:s'
 
 slowPutstrDelay = delayMs 40
 
