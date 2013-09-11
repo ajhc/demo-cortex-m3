@@ -1,15 +1,22 @@
 import Control.Monad
+import System.IO.Unsafe
 
-import Led
 import Delay
 import Gpio
 import qualified TextLCD as LCD
 import EthernetInterface
 import TCPSocketConnection
+import ParseRss
+
+receiveAll tcp = unsafeInterleaveIO receiveAll' where
+  receiveAll' = do
+    s <- tcpSocketConnection_receive tcp
+    if s == "" then return [] else do
+      s' <- unsafeInterleaveIO receiveAll'
+      return $ s ++ s'
 
 main :: IO ()
 main = do
-  ledList <- mapM initLed [led1, led2, led3, led4]
   let p24 = pinName 2 2
       p26 = pinName 2 0
       p27 = pinName 0 11
@@ -24,16 +31,7 @@ main = do
   LCD.putstr lcd "\nIP"
   ethernetGetIpAddress >>= LCD.putstr lcd
   -- TCP
-  tcp <- tcpSocketConnection_connect "mbed.org" 80
-  tcpSocketConnection_send_all tcp "GET /media/uploads/mbed_official/hello.txt HTTP/1.0\n\n"
-  tcpSocketConnection_receive tcp >>= LCD.putstr lcd
-  tcpSocketConnection_receive tcp >>= LCD.putstr lcd
-  tcpSocketConnection_receive tcp >>= LCD.putstr lcd
-  realmain ledList lcd
-
-realmain ledList lcd = forever $ do
-  let ledOnActs  = fmap (ledsOn  . (flip take $ ledList)) [1..4]
-      ledOffActs = fmap (ledsOff . (flip take $ ledList)) [1..4]
-      ledActs    = ledOnActs ++ ledOffActs
-      delayActs  = replicate 20 $ delayUs 150000
-  sequence_ $ zipWith (\a b -> a >> b) ledActs delayActs
+  tcp <- tcpSocketConnection_connect "www.reddit.com" 80
+  tcpSocketConnection_send_all tcp "GET http://www.reddit.com/r/haskell/.rss HTTP/1.0\n\n"
+  r <- receiveAll tcp
+  printTitle (LCD.putc lcd) r
