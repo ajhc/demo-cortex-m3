@@ -5,10 +5,11 @@ titleTag :: String
 titleTag = "<title>"
 
 findTitleTag :: String -> String
-findTitleTag = go
-  where go s = let s' = dropWhile (/= '<') s
-               in if titleTag `isPrefixOf` s' then drop (length titleTag) s'
-                  else go $ drop 1 s'
+findTitleTag s = if titleTag `isPrefixOf` s' then s'' `seq` s''
+                 else s''' `seq` findTitleTag s'''
+  where s'   = dropWhile (/= '<') s
+        s''  = drop (length titleTag) s'
+        s''' = drop 1 s'
 
 showTitle :: (Char -> IO ()) -> String -> IO String
 showTitle io = go
