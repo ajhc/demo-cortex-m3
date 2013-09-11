@@ -15,17 +15,34 @@ receiveAll tcp = unsafeInterleaveIO receiveAll' where
       s' <- unsafeInterleaveIO receiveAll'
       return $ s ++ s'
 
+slowPutstrDelay = delayMs 40
+
 slowPutstr lcd str = do
   let col = LCD.columns lcd
-  slowPutstr' lcd str
+  slowPutstr' lcd col str
 
-slowPutstr' lcd []         = return ()
-slowPutstr' lcd str@(x:xs) = do
-  let col = LCD.columns lcd
-  delayMs 10
+slowPutstr' :: LCD.LCDState -> Int -> String -> IO ()
+slowPutstr' lcd _ [] = do
+  let col  = LCD.columns lcd
+  slowPutstrDelay
   LCD.locate lcd 0 1
-  LCD.putstr lcd $ take col str
-  slowPutstr lcd xs
+  LCD.putstr lcd $ replicate col ' '
+slowPutstr' lcd 0 str@(x:xs) = do
+  let col  = LCD.columns lcd
+      str' = take col str
+      rem  = col - length str'
+  slowPutstrDelay
+  LCD.locate lcd 0 1
+  LCD.putstr lcd str'
+  when (rem > 0) $ LCD.putstr lcd (replicate rem ' ')
+  slowPutstr' lcd 0 xs
+slowPutstr' lcd c str = do
+  let col = LCD.columns lcd
+  slowPutstrDelay
+  LCD.locate lcd 0 1
+  LCD.putstr lcd $ replicate c ' '
+  LCD.putstr lcd $ take (col - c) str
+  slowPutstr' lcd (c - 1) str
 
 printRss lcd host (headline, url) = do
   tcp <- tcpSocketConnection_connect host 80
