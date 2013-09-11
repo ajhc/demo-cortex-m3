@@ -11,15 +11,14 @@ findTitleTag s = if titleTag `isPrefixOf` s' then s'' `seq` s''
         s''  = drop (length titleTag) s'
         s''' = drop 1 s'
 
-showTitle :: (Char -> IO ()) -> String -> IO String
-showTitle io = go
-  where go (x:xs) = do
-          if x /= '<' then io x >> go xs
-            else return xs
+showTitle :: (String -> IO ()) -> String -> IO String
+showTitle io s = do
+  io $ takeWhile (/= '<') s
+  return $ drop 1 $ dropWhile (/= '<') s
 
-printTitle :: (Char -> IO ()) -> String -> IO ()
+printTitle :: (String -> IO ()) -> String -> IO ()
 printTitle io s = do
-  skip s >>= ioprint >>= (\s' -> io '|' >> ioprint s')
+  skip s >>= skip >>= ioprint
   return ()
   where skip = showTitle (const $ return ()) . findTitleTag
         ioprint = showTitle io . findTitleTag

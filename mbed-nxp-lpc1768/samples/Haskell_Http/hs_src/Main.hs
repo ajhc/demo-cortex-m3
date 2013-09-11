@@ -15,16 +15,25 @@ receiveAll tcp = unsafeInterleaveIO receiveAll' where
       s' <- unsafeInterleaveIO receiveAll'
       return $ s ++ s'
 
-slowPutc lcd c = do
-  delayMs 1
-  LCD.putc lcd c
+slowPutstr lcd str = do
+  let col = LCD.columns lcd
+  slowPutstr' lcd str
 
-printRss lcd host url = do
+slowPutstr' lcd []         = return ()
+slowPutstr' lcd str@(x:xs) = do
+  let col = LCD.columns lcd
+  delayMs 10
+  LCD.locate lcd 0 1
+  LCD.putstr lcd $ take col str
+  slowPutstr lcd xs
+
+printRss lcd host (headline, url) = do
   tcp <- tcpSocketConnection_connect host 80
   tcpSocketConnection_send_all tcp $ "GET " ++ url ++ " HTTP/1.0\n\n"
   r <- receiveAll tcp
   LCD.cls lcd
-  printTitle (slowPutc lcd) r
+  LCD.putstr lcd $ ">>" ++ headline
+  printTitle (slowPutstr lcd) r
   tcpSocketConnection_close tcp
   delayMs 1000
   return ()
@@ -46,9 +55,9 @@ main = do
   ethernetGetIpAddress >>= LCD.putstr lcd
   delayMs 500
   -- TCP
-  forever $ mapM_ (printRss lcd "www.reddit.com") ["http://www.reddit.com/r/haskell/.rss"
-                                                  ,"http://www.reddit.com/r/ocaml/.rss"
-                                                  ,"http://www.reddit.com/r/NetBSD/.rss"
-                                                  ,"http://www.reddit.com/r/debian/.rss"
-                                                  ,"http://www.reddit.com/r/linux/.rss"
+  forever $ mapM_ (printRss lcd "www.reddit.com") [("Haskel", "http://www.reddit.com/r/haskell/.rss")
+                                                  ,("OCaml", "http://www.reddit.com/r/ocaml/.rss")
+                                                  ,("NetBSD", "http://www.reddit.com/r/NetBSD/.rss")
+                                                  ,("Debian", "http://www.reddit.com/r/debian/.rss")
+                                                  ,("Linux", "http://www.reddit.com/r/linux/.rss")
                                                   ]
