@@ -17,7 +17,7 @@ receiveAll tcp = unsafeInterleaveIO receiveAll' where
       s' <- unsafeInterleaveIO receiveAll'
       return $ s:s'
 
-slowPutstrDelay = delayMs 40
+slowPutstrDelay = delayMs 80
 
 slowPutstr lcd str = do
   let col = LCD.columns lcd
@@ -74,7 +74,7 @@ main = do
   ethernetGetIpAddress >>= LCD.putstr lcd
   delayMs 500
   -- TCP
-  forever $ mapM_ (printRss lcd "www.reddit.com") [("Haskel", "http://www.reddit.com/r/haskell/.rss")
+  forever $ mapM_ (printRss lcd "www.reddit.com") [("Haskell", "http://www.reddit.com/r/haskell/.rss")
                                                   ,("OCaml", "http://www.reddit.com/r/ocaml/.rss")
                                                   ,("NetBSD", "http://www.reddit.com/r/NetBSD/.rss")
                                                   ,("Debian", "http://www.reddit.com/r/debian/.rss")
