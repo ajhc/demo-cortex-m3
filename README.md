@@ -50,7 +50,7 @@ Using following boards are strongly recommend, so you can use gdb.
 
 ### Install summon-arm-toolchain
 
-    $ git clone git://github.com/esden/summon-arm-toolchain.git
+    $ git clone https://github.com/vedderb/summon-arm-toolchain.git
     $ apt-get install flex bison libgmp3-dev libmpfr-dev libncurses5-dev \
       libmpc-dev autoconf texinfo build-essential libftdi-dev zlib1g-dev \
       git zlib1g-dev python-yaml
@@ -63,7 +63,7 @@ Using following boards are strongly recommend, so you can use gdb.
     $ sudo apt-get install make locales autoconf libreadline-dev \
       libwww-perl libconfig-yaml-perl graphviz haskell-platform drift pandoc \
       libghc-readline-dev libghc-utf8-string-dev libghc-hssyck-dev libghc-pandoc-dev
-    $ git clone git://github.com/ajhc/ajhc.git
+    $ git clone https://github.com/ajhc/ajhc.git
     $ cd ajhc
     $ git checkout arafura
     $ autoreconf -i
@@ -78,7 +78,7 @@ Using following boards are strongly recommend, so you can use gdb.
 ### Install stlink
 
     $ sudo apt-get install libsgutils2-dev libusb-1.0-0-dev
-    $ git clone git://github.com/texane/stlink.git
+    $ git clone https://github.com/texane/stlink.git
     $ cd stlink/
     $ ./autogen.sh
     $ ./configure
@@ -87,7 +87,7 @@ Using following boards are strongly recommend, so you can use gdb.
 
 ### How to build
 
-    $ git clone git://github.com/ajhc/demo-cortex-m3.git
+    $ git clone https://github.com/ajhc/demo-cortex-m3
     $ cd demo-cortex-m3/stm32f3-discovery/
     $ make
 
@@ -121,10 +121,10 @@ Use rev 141212 or later firmware, to support CMSIS-DAP.
 http://mbed.org/blog/entry/Debugging-from-GDB-using-pyOCD/
 
     $ sudo apt-get install python libusb-1.0-0-dev
-    $ git clone git@github.com:walac/pyusb.git
+    $ git clone https://github.com/walac/pyusb.git
     $ cd pyusb
     $ sudo python setup.py install
-    $ git clone git@github.com:mbedmicro/mbed.git
+    $ git clone https://github.com/mbedmicro/mbed.git
     $ cd mbed
     $ git checkout 8557b24b61874bcb1df131c3722286492e69be15
     $ cd workspace_tools/debugger
@@ -176,7 +176,7 @@ You can get more infomation from the following links.
 
 ### How to build
 
-    $ git clone git://github.com/ajhc/demo-cortex-m3.git
+    $ git clone https://github.com/ajhc/demo-cortex-m3.git
     $ cd demo-cortex-m3/lpcxpresso-lpc1769/blinky/
     $ make
 
@@ -206,7 +206,7 @@ Pull nReset low, and pull nReset high.
 
 ### How to build
 
-    $ git clone git://github.com/ajhc/demo-cortex-m3.git
+    $ git clone https://github.com/ajhc/demo-cortex-m3.git
     $ cd demo-cortex-m3/stbee-mini/
     $ make
 
