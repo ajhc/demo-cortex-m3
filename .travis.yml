@@ -1,27 +1,14 @@
 before_install:
   - date
-  - uname -a
-  - ulimit -a
-  - cat /proc/cpuinfo
-  - cat /proc/meminfo
-  - cat /etc/apt/sources.list
-  - git fetch --tags
-  - sudo apt-get -qq update
-  - sudo apt-get -qq -y install make locales autoconf m4 haskell-platform cpphs gcc wget xz-utils
-  - sudo apt-get -qq -y install libghc-temporary-dev libghc-haskeline-dev libghc-utf8-string-dev libghc-hssyck-dev libghc-test-framework-th-dev libghc-test-framework-hunit-dev libghc-test-framework-quickcheck2-dev libghc-uniplate-dev
-  - cabal update || cabal update
-  - cabal install derive || cabal install derive
-  - wget http://files.metasepi.org/ajhc/sat_ubuntu1204_64bit.tar.xz
-  - tar xf sat_ubuntu1204_64bit.tar.xz
-  - export PATH=`pwd`/sat/bin:$HOME/.cabal/bin:$PATH
+  - ./travis-ci/setup.sh
+  - export PATH=`pwd`/sat/bin:$PATH
   - echo $PATH
+  - export PATH=$HOME/.cabal/bin:$PATH
   - git clone https://github.com/ajhc/ajhc.git
-  - cd ajhc && autoreconf -i && ./configure && make install
-  - git --version
-  - ghc --version
-  - ajhc --version
-  - arm-none-eabi-gcc --version
+  - cd ajhc && ./travis-ci/setup.sh && ./travis-ci/build.sh
+  - cd $TRAVIS_BUILD_DIR && ./travis-ci/show_setting.sh
 script:
-  - make
+  - cd $TRAVIS_BUILD_DIR
+  - ./travis-ci/build.sh
 after_script:
   - date
