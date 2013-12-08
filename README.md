@@ -125,7 +125,9 @@ http://mbed.org/blog/entry/Debugging-from-GDB-using-pyOCD/
     $ cd pyusb
     $ sudo python setup.py install
     $ git clone git@github.com:mbedmicro/mbed.git
-    $ cd mbed/workspace_tools/debugger
+    $ cd mbed
+    $ git checkout 8557b24b61874bcb1df131c3722286492e69be15
+    $ cd workspace_tools/debugger
     $ sudo python setup.py install
 
 ### How to build
